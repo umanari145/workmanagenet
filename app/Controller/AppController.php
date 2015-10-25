@@ -32,19 +32,21 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
    public $components = array(
-        'Session',
+        'Cookie',
+   		'Session',
         'Auth' => array(
-            'loginRedirect' => array('controller' => 'users', 'action' => 'index'),
-            'logoutRedirect' => array('controller' => 'users', 'action' => 'login')
+        	'loginAction' => array('controller' => 'worktimes', 'action' => 'login'),
+            'loginRedirect' => array('controller' => 'worktimes', 'action' => 'index'),
+            'logoutRedirect' => array('controller' => 'worktimes', 'action' => 'login')
         )
     );
-   public function beforeFilter() 
-   {
+   public function beforeFilter() {
         if( !$this->Auth->loggedIn() ){
-             $this->redirect(array('controller'=>'users','action' => 'login'));
+             $this->redirect(array('controller'=>'worktimes','action' => 'login'));
         }
    }
-   public function beforeRender(){ 
+
+   public function beforeRender(){
        if( $this->Auth->user('id') !== null ){
            $this->set('login_user_id' , $this->Auth->user('id') );
            $this->set('login_username' , $this->Auth->user('username') );

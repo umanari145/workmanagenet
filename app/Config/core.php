@@ -268,7 +268,7 @@
  * any date & time related errors.
  */
 	//date_default_timezone_set('UTC');
-
+	date_default_timezone_set( "Asia/Tokyo" );
 /**
  * `Config.timezone` is available in which you can set users' timezone string.
  * If a method of CakeTime class is called with $timezone parameter as null and `Config.timezone` is set,
