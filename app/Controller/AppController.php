@@ -31,25 +31,4 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-   public $components = array(
-        'Cookie',
-   		'Session',
-        'Auth' => array(
-        	'loginAction' => array('controller' => 'worktimes', 'action' => 'login'),
-            'loginRedirect' => array('controller' => 'worktimes', 'action' => 'index'),
-            'logoutRedirect' => array('controller' => 'worktimes', 'action' => 'login')
-        )
-    );
-   public function beforeFilter() {
-        if( !$this->Auth->loggedIn() ){
-             $this->redirect(array('controller'=>'worktimes','action' => 'login'));
-        }
-   }
-
-   public function beforeRender(){
-       if( $this->Auth->user('id') !== null ){
-           $this->set('login_user_id' , $this->Auth->user('id') );
-           $this->set('login_username' , $this->Auth->user('username') );
-       }
-   }
 }

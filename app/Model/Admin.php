@@ -2,13 +2,13 @@
 
 App::uses ( 'AppModel', 'Model' );
 
-class User extends AppModel {
+class Admin extends AppModel {
 
-	public $name = 'User';
+	public $name = 'Admin';
 
 
 	/**
-	 * ユーザー登録をするとき
+	 * 管理者を登録をするとき
 	 * にパスワードを暗号化して記録する
 	 * @see Model::beforeSave()
 	 */
@@ -17,20 +17,5 @@ class User extends AppModel {
 			$this->data [$this->alias] ['password'] = AuthComponent::password ( $this->data [$this->alias] ['password'] );
 		}
 		return true;
-	}
-
-	/**
-	 * ユーザー一覧を取得する
-	 * @return Ambigous <multitype:, NULL>
-	 */
-	public function getUserData(){
-			$conditions = array(
-					'fields' => array(
-							'id',
-							'username',
-							'japanese_name'
-					)
-			);
-			return $this->find('all',$conditions);
 	}
 }

@@ -7,7 +7,11 @@ class Room extends AppModel {
 	public $primaryKey = 'id';
 	public $displayField = 'room_name';
 
-
+	/**
+	 * 部屋番号=>部屋名のリストの取得
+	 *
+	 * @return 部屋番号=>部屋名のリスト
+	 */
 	public function getRoomList(){
 		$conditions = array(
 				'fields' => array(
@@ -15,7 +19,20 @@ class Room extends AppModel {
 						'room_name'
 				)
 		);
-
 		return $this->find('list',$conditions);
+	}
+
+	/**
+	 * 部屋データの取得
+	 * @return 部屋データの配列
+	 */
+	public function getRoomData(){
+		$conditions = array(
+				'fields' => array(
+						'id',
+						'room_name'
+				)
+		);
+		return $this->find('all',$conditions);
 	}
 }
