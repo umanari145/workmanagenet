@@ -7,7 +7,7 @@
 		echo $this->Html->link ( __ ( 'ログアウトする' ), array (
 			'controller' => 'users',
 			'action' => 'logout'),
-    		array('class' => 'btn btn-primary', 'role' => 'button')
+    		array('data-role' => 'button', 'role' => 'button')
 			 );
 	?></p>
 
@@ -83,6 +83,7 @@
 
     <?php
 				if ($worktimeStatusArray ["workstatus"] === 2) {
+
 					echo $this->Form->input ( 'report', array (
 							'type' => 'textarea',
 							'label' => "報告",

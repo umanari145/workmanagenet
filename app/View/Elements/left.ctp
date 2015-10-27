@@ -8,7 +8,7 @@
         <p><?php echo $this->Html->link(__('スタッフ登録'), array('controller'=>'admin','action' => 'useradd')); ?></p>
         <p><?php echo $this->Html->link(__('部屋一覧'), array('controller'=>'admin','action' => 'roomindex')); ?></p>
         <p><?php echo $this->Html->link(__('部屋登録'), array('controller'=>'admin','action' => 'roomadd')); ?></p>
-        <p><?php echo $this->Html->link(__('ログアウトする'), array('controller'=>'users','action' => 'logout')); ?></p>
+        <p><?php echo $this->Html->link(__('ログアウトする'), array('controller'=>'admin','action' => 'logout')); ?></p>
     </div>
     <!--item_regist end -->
 

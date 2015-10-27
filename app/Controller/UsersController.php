@@ -6,6 +6,9 @@ class UsersController extends AppController {
 			'Worktime',
 			'Room'
 	);
+
+	public $layout    = 'mobile';
+
 	public $components = array (
 			'Session',
 			'Auth' => array (

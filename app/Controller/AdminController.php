@@ -8,6 +8,8 @@ class AdminController extends AppController {
 			'Room'
 	);
 
+	public $layout ="admin";
+
 	public $components = array (
 			'Session',
 			'Cookie',
@@ -71,7 +73,7 @@ class AdminController extends AppController {
 		$this->User->id = $id;
 
 		if (! $this->User->exists ()) {
-			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+			throw new NotFoundException ( __ ( 'スタッフが存在しません。' ) );
 		}
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
@@ -88,6 +90,30 @@ class AdminController extends AppController {
 		}
 		$this->render ( 'userregist' );
 	}
+
+	/**
+	 * スタッフの削除
+	 *
+	 * @param string $id ユーザーID
+	 * @throws NotFoundException
+	 */
+	public function userdelete( $id = null){
+
+		$this->User->id=$id;
+
+		if (! $this->User->exists ()) {
+			throw new NotFoundException ( __ ( 'スタッフが存在しません。' ) );
+		}
+
+		if($this->User->delete()){
+			$this->Session->setFlash('スタッフの削除が完了しました。');
+			$this->redirect(array('action'=>'index'));
+		}else{
+			$this->Sessin->setFlash('スタッフの削除に失敗しました');
+		}
+		$this->render ( 'userindex' );
+	}
+
 
 	public function beforeFilter() {
 		$this->Auth->allow ( 'login', 'logout','amregist' );
@@ -157,7 +183,33 @@ class AdminController extends AppController {
 		$this->render ( 'roomregist' );
 	}
 
+	/**
+	 * 部屋の削除
+	 *
+	 * @param string $id 部屋ID
+	 * @throws NotFoundException
+	 */
+	public function roomdelete( $id = null){
 
+		$this->Room->id=$id;
+
+		if (! $this->Room->exists ()) {
+			throw new NotFoundException ( __ ( '部屋が存在しません。' ) );
+		}
+
+		if($this->Room->delete()){
+			$this->Session->setFlash('部屋の削除が完了しました。');
+			$this->redirect(array('action'=>'index'));
+		}else{
+			$this->Sessin->setFlash('部屋の削除に失敗しました');
+		}
+		$this->render ( 'roomindex' );
+	}
+
+
+	/**
+	 * 管理者の登録
+	 */
 	public function amregist(){
 
 		if ($this->request->is ( 'post' )) {
