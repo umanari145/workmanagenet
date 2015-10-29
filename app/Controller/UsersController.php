@@ -57,7 +57,8 @@ class UsersController extends AppController {
 	public function regist() {
 		$userId = $this->Auth->user ( 'id' );
 
-		if (empty ( $this->Auth->user () )) {
+		$user = $this->Auth->user ();
+		if (empty ( $user )) {
 			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
 		}
 
