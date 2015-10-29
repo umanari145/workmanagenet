@@ -1,4 +1,5 @@
-<div style="width: 500px;">
+<div date-role="fieldcontain">
+	<fieldset data-role="controlgroup">
 	<p><?php echo $userInfo["japanese_name"]; ?></p>
 
 	<p>
@@ -94,4 +95,5 @@
 
     <?php echo $this->Form->submit($worktimeStatusArray["statusMessage"]); ?>
     <?php echo $this->Form->end(); ?>
+     </fieldset>
 </div>
