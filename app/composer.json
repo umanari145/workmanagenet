@@ -1,0 +1,5 @@
+{
+    "require": {
+        "josegonzalez/cakephp-environments": "1.0.0"
+    }
+}
