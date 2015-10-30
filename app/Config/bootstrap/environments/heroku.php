@@ -1,5 +1,5 @@
 <?php
-Environment::configure('heroku', false, [
+Environment::configure('heroku', true, [
 ], function () {
     // Heroku 用設定
 	    App::uses('CakeLog', 'Log');
@@ -15,13 +15,13 @@ Environment::configure('heroku', false, [
     ));
  
    // Database settings
-    if (empty(getenv('DATABASE_URL'))) {
+    if (empty(getenv('CLEARDB_DATABASE_URL'))) {
         throw new CakeException('no DATABASE_URL environment variable');
     }
-    $url = parse_url(getenv('DATABASE_URL'));
+    $url = parse_url(env('CLEARDB_DATABASE_URL'));
 	
     Configure::write('DATABASE_OPTIONS', [
-        'datasource' => 'Database/Postgres',
+        'datasource' => 'Database/Mysql',
         'persistent' => false,
         'host' => $url['host'],
         'login' => $url['user'],
