@@ -121,15 +121,8 @@ class AdminController extends AppController {
 
 	public function beforeFilter() {
 		$this->Auth->allow ( 'login', 'logout','amregist' );
-		// 全てのアクション
-		$this->Security->requireSecure();
 	}
 	
-	public function forceSSL() {
-        $this->redirect('https://' . env('SERVER_NAME') . $this->here);
-    }
-	
-
 	/**
 	 * ログイン時に入る管理画面のトップ
 	 */

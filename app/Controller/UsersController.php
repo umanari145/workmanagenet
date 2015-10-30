@@ -5,7 +5,6 @@ class UsersController extends AppController {
 	public $helpers = array('Html', 'Form');
 
 	public $uses = array (
-			'Security',
 			'User',
 			'Worktime',
 			'Room'
@@ -32,13 +31,9 @@ class UsersController extends AppController {
 	);
 
 	public function beforeFilter() {
-		$this->Auth->allow ( 'login', 'logout' );
-		$this->Security->requireSecure();		
+		$this->Auth->allow ( 'login', 'logout' );		
 	}
 
-	public function forceSSL() {
-        $this->redirect('https://' . env('SERVER_NAME') . $this->here);
-    }
 	
 	/**
 	 * ログインメソッド
