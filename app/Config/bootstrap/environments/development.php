@@ -19,9 +19,9 @@ Environment::configure('development', false, [
         'datasource' => 'Database/Mysql',
         'persistent' => false,
         'host' => 'localhost',
-        'login' => 'shin',
+        'login' => 'root',
         'password' => '',
-        'database' => 'app',
+        'database' => 'work_management',
     ]);
  
     Configure::write('TEST_DATABASE_OPTIONS', [
