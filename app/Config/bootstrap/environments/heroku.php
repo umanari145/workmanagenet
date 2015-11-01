@@ -13,13 +13,13 @@ Environment::configure('heroku', true, [
         'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
         'file' => 'error',
     ));
- 
+
    // Database settings
     if (empty(getenv('CLEARDB_DATABASE_URL'))) {
         throw new CakeException('no DATABASE_URL environment variable');
     }
     $url = parse_url(env('CLEARDB_DATABASE_URL'));
-	
+
     Configure::write('DATABASE_OPTIONS', [
         'datasource' => 'Database/Mysql',
         'persistent' => false,
@@ -28,7 +28,7 @@ Environment::configure('heroku', true, [
         'password' => $url['pass'],
         'database' => substr($url['path'], 1),
     ]);
- 
+
     Configure::write('TEST_DATABASE_OPTIONS', [
         'datasource' => 'Database/Postgres',
         'persistent' => false,
@@ -37,8 +37,8 @@ Environment::configure('heroku', true, [
         'password' => '',
         'database' => 'app_test',
     ]);
- 
+
     // Cache settings
     Cache::config('default', array('engine' => 'File'));
-	
+
 });

@@ -14,7 +14,6 @@ class AdminController extends AppController {
 	public $layout ="admin";
 
 	public $components = array (
-			'Security',
 			'Session',
 			'Cookie',
 			'Auth' => array (
@@ -90,7 +89,7 @@ class AdminController extends AppController {
 				$this->Session->setFlash ( __ ( 'スタッフの情報をを編集することができませんでした。もう一度実行してください。' ) );
 			}
 		} else {
-			$this->request->data = $this->User->read ( null, $id );
+			$this->request->data = $this->User->getSingleUserData( $id );
 		}
 		$this->render ( 'userregist' );
 	}
@@ -122,7 +121,7 @@ class AdminController extends AppController {
 	public function beforeFilter() {
 		$this->Auth->allow ( 'login', 'logout','amregist' );
 	}
-	
+
 	/**
 	 * ログイン時に入る管理画面のトップ
 	 */

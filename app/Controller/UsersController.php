@@ -31,10 +31,10 @@ class UsersController extends AppController {
 	);
 
 	public function beforeFilter() {
-		$this->Auth->allow ( 'login', 'logout' );		
+		$this->Auth->allow ( 'login', 'logout' );
 	}
 
-	
+
 	/**
 	 * ログインメソッド
 	 */

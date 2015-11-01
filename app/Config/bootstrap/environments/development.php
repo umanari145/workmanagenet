@@ -13,7 +13,7 @@ Environment::configure('development', false, [
         'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
         'file' => 'error',
     ));
- 
+
     // Database settings
     Configure::write('DATABASE_OPTIONS', [
         'datasource' => 'Database/Mysql',
@@ -23,7 +23,7 @@ Environment::configure('development', false, [
         'password' => '',
         'database' => 'work_management',
     ]);
- 
+
     Configure::write('TEST_DATABASE_OPTIONS', [
         'datasource' => 'Database/Postgres',
         'persistent' => false,
@@ -32,7 +32,7 @@ Environment::configure('development', false, [
         'password' => '',
         'database' => 'app_test',
     ]);
- 
+
     // Cache settings
     Cache::config('default', array('engine' => 'File'));
 });
