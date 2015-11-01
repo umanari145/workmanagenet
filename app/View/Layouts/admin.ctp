@@ -47,7 +47,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		</div>
 		<div id="footer">
 			<p>
-				ファーストマインド合同会社
+				勤怠管理アプリ管理画面
 			</p>
 		</div>
 	</div>
