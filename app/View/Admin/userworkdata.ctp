@@ -1,5 +1,5 @@
 <div class="items index">
-	<h2><?php echo __('部屋一覧');?></h2>
+	<h2><?php echo __('勤務記録一覧');?></h2>
 
 	<table cellpadding="0" cellspacing="0" class="sortable" id="workline">
 		<tr>

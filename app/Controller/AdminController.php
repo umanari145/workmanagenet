@@ -116,10 +116,21 @@ class AdminController extends AppController {
 		$this->render ( 'userindex' );
 	}
 
+
+	/**
+	 * 勤務一覧情報を出力
+	 */
 	public function userworkdata(){
 		$this->set("workLine",$this->Worktime->getWorkLine());
 	}
 
+	public function workdetail( $id = null){
+		$this->Worktime->id = $id;
+		if (! $this->Worktime->exists ()) {
+			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+		}
+		$this->set("workdetail",$this->Worktime->find('first',array("conditions"=>array("Worktime.id"=>$id))));
+	}
 
 	public function beforeFilter() {
 		$this->Auth->allow ( 'login', 'logout');

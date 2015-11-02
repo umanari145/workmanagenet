@@ -4,7 +4,7 @@ class Worktime extends AppModel {
 
 	public $name = 'Worktime';
 
-	public $belongsTo = 'User';
+	public $belongsTo = array('User','Room');
 
 	/**
 	 * 現状スタッフが業務開始か作業中かを判断する
