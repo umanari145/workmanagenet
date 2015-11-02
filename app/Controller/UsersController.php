@@ -67,17 +67,17 @@ class UsersController extends AppController {
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
 			if ($this->Worktime->save ( $this->request->data )) {
-			} else {
+				$this->logout();
 			}
 		}
 
 		$workTimeData = $this->Worktime->checkWorktimeData ( $userId );
 		$worktimeStatusArray = $this->Worktime->getStatusMessage ( $workTimeData );
 		$this->set ( "worktimeStatusArray", $worktimeStatusArray );
-
 		$this->set ( "workTimeData", $workTimeData );
 		$this->set ( "roomList", $this->Room->getRoomList () );
 		$this->set ( "userInfo", $this->Auth->user () );
+
 		$this->render ( 'regist' );
 	}
 

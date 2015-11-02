@@ -37,7 +37,6 @@ class AdminController extends AppController {
 					)
 			);
 
-
 	/**
 	 * スタッフユーザー一覧の取得
 	 */
@@ -117,9 +116,13 @@ class AdminController extends AppController {
 		$this->render ( 'userindex' );
 	}
 
+	public function userworkdata(){
+		$this->set("workLine",$this->Worktime->getWorkLine());
+	}
+
 
 	public function beforeFilter() {
-		$this->Auth->allow ( 'login', 'logout','amregist' );
+		$this->Auth->allow ( 'login', 'logout');
 	}
 
 	/**
@@ -207,25 +210,6 @@ class AdminController extends AppController {
 			$this->Sessin->setFlash('部屋の削除に失敗しました');
 		}
 		$this->render ( 'roomindex' );
-	}
-
-
-	/**
-	 * 管理者の登録
-	 */
-	public function amregist(){
-
-		if ($this->request->is ( 'post' )) {
-
-			if ($this->Admin->save ( $this->request->data )) {
-				$this->redirect ( array (
-						'action' => 'index'
-				) );
-			} else {
-				$this->Session->setFlash ( '登録に失敗しました。' );
-			}
-		}
-		$this->render ( 'amregist' );
 	}
 
 

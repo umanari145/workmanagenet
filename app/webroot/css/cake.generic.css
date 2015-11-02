@@ -150,6 +150,7 @@ th {
 	padding:4px;
 }
 th a {
+	background-color:#ddd;
 	display: block;
 	padding: 2px 4px;
 	text-decoration: none;

@@ -30,6 +30,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('cake.generic');
 		echo $this->Html->script('custom');
+		echo $this->Html->script('sortable');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');

@@ -4,6 +4,7 @@ class Worktime extends AppModel {
 
 	public $name = 'Worktime';
 
+	public $belongsTo = 'User';
 
 	/**
 	 * 現状スタッフが業務開始か作業中かを判断する
@@ -43,5 +44,25 @@ class Worktime extends AppModel {
 			$worktimeStatusArray ['statusMessage'] = "終了します。";
 		}
 		return $worktimeStatusArray;
+	}
+
+
+	/**
+	 * 勤務時間の履歴を取得
+	 *
+	 * @param unknown $existUserList 現状のユーザー
+	 * @return 勤務履歴
+	 */
+	public function getWorkLine($existUserList = array()) {
+		$workLine = $this->find ( 'all', array (
+				'order' => array (
+						'Worktime.start_time DESC'
+				),
+// 				'conditions' => array (
+// 						'Worktime.user_id' => $existUserList
+// 				)
+		) );
+
+		return $workLine;
 	}
 }
