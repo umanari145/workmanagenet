@@ -46,15 +46,14 @@ class User extends AppModel {
 	 */
 	public function getSingleUserData($id) {
 		$conditions = array (
-				'User.id' => $id,
 				'fields' => array (
 						'id',
 						'username',
 						'japanese_name',
 						'email'
-				)
-		)
-		;
+				),
+				'conditions' => array('User.id' => $id)
+		);
 		return $this->find ( 'first', $conditions );
 	}
 }
