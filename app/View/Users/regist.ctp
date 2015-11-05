@@ -34,10 +34,13 @@
 
 	switch ($worktimeStatusArray ["workstatus"]) {
 		case 1 :
+
+			$roomVal = ( !empty($lastUsedRoomId))? $lastUsedRoomId:"";
+
 			echo $this->Form->input ( 'room_id', array (
 					'label' => "部屋",
 					'options' => $roomList,
-					'value' => ""
+					'value' => $roomVal
 			) );
 			break;
 		case 2 :

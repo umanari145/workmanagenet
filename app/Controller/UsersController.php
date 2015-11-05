@@ -67,17 +67,25 @@ class UsersController extends AppController {
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
 			if ($this->Worktime->save ( $this->request->data )) {
-				$this->logout();
+
 			}
 		}
 
 		$workTimeData = $this->Worktime->checkWorktimeData ( $userId );
 		$worktimeStatusArray = $this->Worktime->getStatusMessage ( $workTimeData );
+
 		$this->set ( "worktimeStatusArray", $worktimeStatusArray );
 		$this->set ( "workTimeData", $workTimeData );
+			// 直前まで使っていた部屋を初期設定にする
+		if ($worktimeStatusArray ["workstatus"] === 1) {
+			$workLine = $this->Worktime->getWorkLineByUserId ( $userId );
+			if (! empty ( $workLine )) {
+				$this->set ( "lastUsedRoomId", $workLine [0] ["Worktime"] ["room_id"] );
+			}
+		}
+
 		$this->set ( "roomList", $this->Room->getRoomList () );
 		$this->set ( "userInfo", $this->Auth->user () );
-
 		$this->render ( 'regist' );
 	}
 

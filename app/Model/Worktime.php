@@ -65,4 +65,24 @@ class Worktime extends AppModel {
 
 		return $workLine;
 	}
+
+	/**
+	 * あるユーザーの勤務履歴を取得
+	 *
+	 * @param unknown $userId
+	 *        	ユーザーid
+	 * @return 勤務履歴
+	 */
+	public function getWorkLineByUserId($userId = null) {
+		$workLine = $this->find ( 'all', array (
+				'order' => array (
+						'Worktime.start_time DESC'
+				),
+				'conditions' => array (
+						'Worktime.user_id' => $userId
+				)
+		) );
+
+		return $workLine;
+	}
 }

@@ -17,6 +17,9 @@ class Room extends AppModel {
 				'fields' => array(
 						'id',
 						'room_name'
+				),
+				'conditions' => array (
+						'Room.is_delete' => 0
 				)
 		);
 		return $this->find('list',$conditions);
@@ -31,6 +34,9 @@ class Room extends AppModel {
 				'fields' => array(
 						'id',
 						'room_name'
+				),
+				'conditions' => array (
+						'Room.is_delete' => 0
 				)
 		);
 		return $this->find('all',$conditions);

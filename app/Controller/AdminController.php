@@ -2,7 +2,7 @@
 App::uses ( 'AppController', 'Controller' );
 class AdminController extends AppController {
 
-	public $helpers = array('Html', 'Form');
+	public $helpers = array('Html', 'Form','Customize');
 
 	public $uses = array (
 			'Admin',
@@ -55,7 +55,7 @@ class AdminController extends AppController {
 			if ($this->User->save ( $this->request->data )) {
 				$this->Session->setFlash ( __ ( 'スタッフの登録が成功しました。' ) );
 				$this->redirect ( array (
-						'action' => 'index'
+						'action' => 'userindex'
 				) );
 			} else {
 				$this->Session->setFlash ( 'スタッフの登録に失敗しました。' );
@@ -82,7 +82,7 @@ class AdminController extends AppController {
 			if ($this->User->save ( $this->request->data )) {
 				$this->Session->setFlash ( __ ( 'スタッフの編集が成功しました。' ) );
 				$this->redirect ( array (
-						'action' => 'index'
+						'action' => 'userindex'
 				) );
 			} else {
 				$this->Session->setFlash ( __ ( 'スタッフの情報をを編集することができませんでした。もう一度実行してください。' ) );
@@ -96,22 +96,29 @@ class AdminController extends AppController {
 	/**
 	 * スタッフの削除
 	 *
-	 * @param string $id ユーザーID
+	 * @param string $id
+	 *        	ユーザーID
 	 * @throws NotFoundException
 	 */
-	public function userdelete( $id = null){
-
-		$this->User->id=$id;
+	public function userdelete($id = null) {
+		$this->User->id = $id;
 
 		if (! $this->User->exists ()) {
 			throw new NotFoundException ( __ ( 'スタッフが存在しません。' ) );
 		}
 
-		if($this->User->delete()){
-			$this->Session->setFlash('スタッフの削除が完了しました。');
-			$this->redirect(array('action'=>'index'));
-		}else{
-			$this->Sessin->setFlash('スタッフの削除に失敗しました');
+		$data = array (
+				"id" => $id,
+				"is_delete" => 1
+		);
+
+		if ($this->User->save( $data)) {
+			$this->Session->setFlash ( 'スタッフの削除が完了しました。' );
+			$this->redirect ( array (
+					'action' => 'userindex'
+			) );
+		} else {
+			$this->Sessin->setFlash ( 'スタッフの削除に失敗しました' );
 		}
 		$this->render ( 'userindex' );
 	}
@@ -161,7 +168,7 @@ class AdminController extends AppController {
 			if ($this->Room->save ( $this->request->data )) {
 				$this->Session->setFlash ( __ ( '部屋の登録が成功しました。' ) );
 				$this->redirect ( array (
-						'action' => 'index'
+						'action' => 'roomindex'
 				) );
 
 			} else {
@@ -189,7 +196,7 @@ class AdminController extends AppController {
 			if ($this->Room->save ( $this->request->data )) {
 				$this->Session->setFlash ( __ ( '部屋の編集が成功しました。' ) );
 				$this->redirect ( array (
-						'action' => 'index'
+						'action' => 'roomindex'
 				) );
 			} else {
 				$this->Session->setFlash ( __ ( '部屋の情報をを編集することができませんでした。もう一度実行してください。' ) );
@@ -203,22 +210,29 @@ class AdminController extends AppController {
 	/**
 	 * 部屋の削除
 	 *
-	 * @param string $id 部屋ID
+	 * @param string $id
+	 *        	部屋ID
 	 * @throws NotFoundException
 	 */
-	public function roomdelete( $id = null){
-
-		$this->Room->id=$id;
+	public function roomdelete($id = null) {
+		$this->Room->id = $id;
 
 		if (! $this->Room->exists ()) {
 			throw new NotFoundException ( __ ( '部屋が存在しません。' ) );
 		}
 
-		if($this->Room->delete()){
-			$this->Session->setFlash('部屋の削除が完了しました。');
-			$this->redirect(array('action'=>'index'));
-		}else{
-			$this->Sessin->setFlash('部屋の削除に失敗しました');
+		$data = array (
+				"id" => $id,
+				"is_delete" => 1
+		);
+
+		if ($this->Room->save ( $data )) {
+			$this->Session->setFlash ( '部屋の削除が完了しました。' );
+			$this->redirect ( array (
+					'action' => 'roomindex'
+			) );
+		} else {
+			$this->Sessin->setFlash ( '部屋の削除に失敗しました' );
 		}
 		$this->render ( 'roomindex' );
 	}
