@@ -26,7 +26,7 @@ class CustomizeHelper extends AppHelper {
 	 * @param $seconds 秒
 	 * @return 時分秒
 	 */
-	public function convertSecondTohms($seconds) {
+	public function convertSecondTohms( $seconds) {
 		$hours = floor ( $seconds / 3600 );
 		$minutes = floor ( ($seconds- $hours*3600) / 60);
 		$lastSeconds = $seconds - ($hours * 60 * 60 + $minutes * 60);
@@ -38,5 +38,29 @@ class CustomizeHelper extends AppHelper {
 			$hms = $lastSeconds . "秒";
 		}
 		return $hms;
+	}
+
+	/**
+	 * ユーザーの勤務状態を表示
+	 *
+	 * @param unknown $workstate 勤務状態
+	 * @param 稼働時間
+	 * @return string 表示文字
+	 */
+	public function viewState($workstate,$seconds){
+		$viewState = "";
+		switch ($workstate) {
+			case "1" :
+				$viewState = "作業中";
+				break;
+			case "2" :
+				$viewState = $this->convertSecondTohms($seconds);
+				break;
+
+			case "3" :
+				$viewState = "異常終了";
+				break;
+		}
+		return $viewState;
 	}
 }

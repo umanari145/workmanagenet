@@ -10,6 +10,8 @@
 		<dd><?php echo $workdetail["Worktime"]["start_time"]; ?></dd>
 		<dt>勤務終了時間</dt>
 		<dd><?php echo $workdetail["Worktime"]["end_time"]; ?>	</dd>
+		<dt>稼働時間</dt>
+		<dd><?php echo $this->Customize->viewState($workdetail["Worktime"]["workstatus"],$workdetail["Worktime"]["working_time"]); ?>	</dd>
 		<dt>報告</dt>
 		<dd><?php echo $workdetail["Worktime"]["report"]; ?></dd>
 	</dl>

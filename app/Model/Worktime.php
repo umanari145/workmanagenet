@@ -1,10 +1,11 @@
 <?php
 App::uses ( 'AppModel', 'Model' );
 class Worktime extends AppModel {
-
 	public $name = 'Worktime';
-
-	public $belongsTo = array('User','Room');
+	public $belongsTo = array (
+			'User',
+			'Room'
+	);
 
 	/**
 	 * 現状スタッフが業務開始か作業中かを判断する
@@ -38,32 +39,58 @@ class Worktime extends AppModel {
 			// 業務開始
 			$worktimeStatusArray ['workstatus'] = 1;
 			$worktimeStatusArray ['statusMessage'] = "開始します。";
+			$worktimeStatusArray ['javascript'] = array (
+					"onclick" => "startShowing();"
+			);
 		} else {
 			// 業務中→終了
 			$worktimeStatusArray ['workstatus'] = 2;
 			$worktimeStatusArray ['statusMessage'] = "終了します。";
+			$worktimeStatusArray ['javascript'] = array (
+					"onclick" => "stopShowing();"
+			);
 		}
 		return $worktimeStatusArray;
 	}
 
-
 	/**
 	 * 勤務時間の履歴を取得
 	 *
-	 * @param unknown $existUserList 現状のユーザー
+	 * @param unknown $existUserList
+	 *        	現状のユーザー
 	 * @return 勤務履歴
 	 */
 	public function getWorkLine($existUserList = array()) {
 		$workLine = $this->find ( 'all', array (
 				'order' => array (
 						'Worktime.start_time DESC'
-				),
-// 				'conditions' => array (
-// 						'Worktime.user_id' => $existUserList
-// 				)
-		) );
+				)
+		)
+		// 'conditions' => array (
+		// 'Worktime.user_id' => $existUserList
+		// )
+		 );
+
+		foreach ( $workLine as &$work ) {
+			$this->calcWorkTimeFromStartToEnd ( $work );
+		}
 
 		return $workLine;
+	}
+
+	/**
+	 * 稼働時間の算出
+	 *
+	 * @param unknown $work
+	 *        	勤務レコード
+	 * @return number 稼働時間
+	 */
+	public function calcWorkTimeFromStartToEnd(&$work) {
+		$workingtime = 0;
+		if ($work ["Worktime"] ["workstatus"] === "2" && ! empty ( $work ["Worktime"] ["start_time"] ) && ! empty ( $work ["Worktime"] ["end_time"] )) {
+			$workingtime = strtotime ( $work ["Worktime"] ["end_time"] ) - strtotime ( $work ["Worktime"] ["start_time"] );
+		}
+		$work ["Worktime"] ["working_time"] = $workingtime;
 	}
 
 	/**
@@ -82,7 +109,26 @@ class Worktime extends AppModel {
 						'Worktime.user_id' => $userId
 				)
 		) );
-
 		return $workLine;
+	}
+
+	/**
+	 * 開始時間、終了時間の記録
+	 *
+	 * @see Model::beforeSave()
+	 */
+	public function beforeSave($option = array()) {
+		switch ($this->data [$this->alias] ['workstatus']) {
+			case "1" :
+				$this->data [$this->alias] ['start_time'] = date ( 'Y-m-d H:i:s' );
+				break;
+			case "2" :
+				$this->data [$this->alias] ['end_time'] = date ( 'Y-m-d H:i:s' );
+				break;
+			default :
+				break;
+		}
+
+		return true;
 	}
 }

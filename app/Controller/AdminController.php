@@ -131,12 +131,20 @@ class AdminController extends AppController {
 		$this->set("workLine",$this->Worktime->getWorkLine());
 	}
 
+	/**
+	 * 勤務履歴詳細データを表示
+	 *
+	 * @param string $id 勤務履歴id
+	 * @throws NotFoundException
+	 */
 	public function workdetail( $id = null){
 		$this->Worktime->id = $id;
 		if (! $this->Worktime->exists ()) {
 			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
 		}
-		$this->set("workdetail",$this->Worktime->find('first',array("conditions"=>array("Worktime.id"=>$id))));
+		$workDetailData = $this->Worktime->find('first',array("conditions"=>array("Worktime.id"=>$id)));
+		$this->Worktime->calcWorkTimeFromStartToEnd( $workDetailData );
+		$this->set("workdetail",$workDetailData);
 	}
 
 	public function beforeFilter() {

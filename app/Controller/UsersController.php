@@ -73,7 +73,6 @@ class UsersController extends AppController {
 
 		$workTimeData = $this->Worktime->checkWorktimeData ( $userId );
 		$worktimeStatusArray = $this->Worktime->getStatusMessage ( $workTimeData );
-
 		$this->set ( "worktimeStatusArray", $worktimeStatusArray );
 		$this->set ( "workTimeData", $workTimeData );
 			// 直前まで使っていた部屋を初期設定にする

@@ -2,6 +2,15 @@
 	<fieldset data-role="controlgroup">
 	<p><?php echo $userInfo["japanese_name"]; ?></p>
 
+	<span id="start_time">
+	<?php
+	if($worktimeStatusArray ["workstatus"] === 2){
+		echo $workTimeData["Worktime"]["start_time"];
+	}
+	?>
+
+	</span>
+
 	<p>
 	<?php
 
@@ -61,29 +70,6 @@
 				) );
 				?>
 
-    <?php
-				switch ($worktimeStatusArray ["workstatus"]) {
-					case 1 :
-
-						echo $this->Form->input ( 'start_time', array (
-								'type' => 'hidden',
-								'value' => date ( 'Y-m-d H:i:s' )
-						) );
-
-						break;
-					case 2 :
-
-						echo $this->Form->input ( 'end_time', array (
-								'type' => 'hidden',
-								'value' => date ( 'Y-m-d H:i:s' )
-						) );
-
-						break;
-					default :
-						break;
-				}
-
-				?>
 
     <?php
 				if ($worktimeStatusArray ["workstatus"] === 2) {
@@ -95,8 +81,8 @@
 					) );
 				}
 				?>
+    <?php echo $this->Form->submit($worktimeStatusArray["statusMessage"],$worktimeStatusArray["javascript"]); ?>
 
-    <?php echo $this->Form->submit($worktimeStatusArray["statusMessage"]); ?>
     <?php echo $this->Form->end(); ?>
      </fieldset>
 </div>
