@@ -1,8 +1,11 @@
 <?php
-Environment::configure('development', true, [
+Environment::configure('development', false, [
 ], function () {
     // Log settings
     App::uses('CakeLog', 'Log');
+
+    define("ENTRY_URL","http://localhost/fm-liveworks/");
+
     CakeLog::config('debug', array(
         'engine' => 'File',
         'types' => array('notice', 'info', 'debug'),

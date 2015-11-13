@@ -39,6 +39,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 </head>
 <body>
 	<div id="container">
+		<input type="hidden" id="entry_url" value="<?php echo ENTRY_URL; ?>">
 		<div id="header">
 			<h1>勤怠管理アプリ管理画面</h1>
 		</div>

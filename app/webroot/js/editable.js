@@ -1,6 +1,9 @@
 $(function() {
 
 	$('div.edit').click(function() {
+
+		var entryUrl = $("#entry_url").val();
+
 		// classでonを持っているかチェック
 		if (!$(this).hasClass('on')) {
 			// 編集可能時はclassでonをつける
@@ -27,7 +30,7 @@ $(function() {
 
 						$.ajax({
 							type : "POST",
-							url : "/fm-liveworks/admin/updateworkdata",
+							url : entryUrl+"admin/updateworkdata",
 							data : postObj,
 							success : function(res) {
 								window.location.reload();
