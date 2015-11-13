@@ -29,6 +29,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<?php
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('cake.generic');
+		echo $this->Html->script('jquery-1.10.2.min');
 		echo $this->Html->script('custom');
 		echo $this->Html->script('sortable');
 		echo $this->fetch('meta');

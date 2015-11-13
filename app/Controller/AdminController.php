@@ -147,6 +147,20 @@ class AdminController extends AppController {
 		$this->set("workdetail",$workDetailData);
 	}
 
+	public function updateworkdata(){
+		$this->autoRender = FALSE;
+		if($this->request->is('ajax')){
+			$data = $this->request->data;
+			if ($this->Worktime->save ( $data )) {
+
+				echo json_encode($value);
+			}else{
+				echo "fail";
+			}
+		}
+	}
+
+
 	public function beforeFilter() {
 		$this->Auth->allow ( 'login', 'logout');
 	}

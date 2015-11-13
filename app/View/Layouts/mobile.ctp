@@ -33,7 +33,6 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->Html->script('jquery-1.10.2.min');
 		echo $this->Html->script('jquery.mobile-1.4.5.min');
 		echo $this->Html->script('sugar.min');
-		echo $this->Html->script('custom');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');

@@ -178,6 +178,11 @@ table td.actions a {
 	margin: 0px 6px;
 	padding:2px 5px;
 }
+table .work_time, table .work_time_id,tale input{
+	text-align:right;
+	font-size:7pt;
+}
+
 
 /* SQL log */
 .cake-sql-log {
@@ -743,3 +748,4 @@ pre {
 #url-rewriting-warning {
 	display:none;
 }
+

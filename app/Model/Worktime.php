@@ -39,16 +39,12 @@ class Worktime extends AppModel {
 			// 業務開始
 			$worktimeStatusArray ['workstatus'] = 1;
 			$worktimeStatusArray ['statusMessage'] = "開始します。";
-			$worktimeStatusArray ['javascript'] = array (
-					"onclick" => "startShowing();"
-			);
+			$worktimeStatusArray ['javascript'] = array();
 		} else {
 			// 業務中→終了
 			$worktimeStatusArray ['workstatus'] = 2;
 			$worktimeStatusArray ['statusMessage'] = "終了します。";
-			$worktimeStatusArray ['javascript'] = array (
-					"onclick" => "stopShowing();"
-			);
+			$worktimeStatusArray ['javascript'] = array ();
 		}
 		return $worktimeStatusArray;
 	}
@@ -118,15 +114,17 @@ class Worktime extends AppModel {
 	 * @see Model::beforeSave()
 	 */
 	public function beforeSave($option = array()) {
-		switch ($this->data [$this->alias] ['workstatus']) {
-			case "1" :
-				$this->data [$this->alias] ['start_time'] = date ( 'Y-m-d H:i:s' );
-				break;
-			case "2" :
-				$this->data [$this->alias] ['end_time'] = date ( 'Y-m-d H:i:s' );
-				break;
-			default :
-				break;
+		if (! empty ( $this->data [$this->alias] ['workstatus'] )) {
+			switch ($this->data [$this->alias] ['workstatus']) {
+				case "1" :
+					$this->data [$this->alias] ['start_time'] = date ( 'Y-m-d H:i:s' );
+					break;
+				case "2" :
+					$this->data [$this->alias] ['end_time'] = date ( 'Y-m-d H:i:s' );
+					break;
+				default :
+					break;
+			}
 		}
 
 		return true;

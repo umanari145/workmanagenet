@@ -1,17 +1,9 @@
+	<?php	if($worktimeStatusArray ["workstatus"] === 2) echo "勤務開始時間　<div id='start_time'>". date( "Y年n月d日 H時m時s秒", strtotime($workTimeData["Worktime"]["start_time"])) ."</div>" ;?>
+
 <div date-role="fieldcontain">
 	<fieldset data-role="controlgroup">
-	<p><?php echo $userInfo["japanese_name"]; ?></p>
-
-	<span id="start_time">
-	<?php
-	if($worktimeStatusArray ["workstatus"] === 2){
-		echo $workTimeData["Worktime"]["start_time"];
-	}
-	?>
-
-	</span>
-
-	<p>
+		<p><?php echo $userInfo["japanese_name"]; ?></p>
+		<p>
 	<?php
 
 		echo $this->Html->link ( __ ( 'ログアウトする' ), array (
@@ -81,7 +73,7 @@
 					) );
 				}
 				?>
-    <?php echo $this->Form->submit($worktimeStatusArray["statusMessage"],$worktimeStatusArray["javascript"]); ?>
+    <?php echo $this->Form->button($worktimeStatusArray["statusMessage"],$worktimeStatusArray["javascript"]); ?>
 
     <?php echo $this->Form->end(); ?>
      </fieldset>
