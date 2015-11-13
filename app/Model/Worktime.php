@@ -90,6 +90,52 @@ class Worktime extends AppModel {
 	}
 
 	/**
+	 * 作業開始から24時間経過した勤務履歴を抽出
+	 *
+	 * @return Ambigous <multitype:, NULL>
+	 */
+	public function getForgetLogoutData() {
+		$criterion_time = date ( 'Y-m-d H:i:s', strtotime ( "-1day" ) );
+
+		$workLine = $this->find ( 'all', array (
+				'order' => array (
+						'Worktime.start_time DESC'
+				),
+				'conditions' => array (
+						'Worktime.workstatus' => "1",
+						'Worktime.start_time <= ' => $criterion_time,
+						'Worktime.end_time ' => null
+				)
+		) );
+		$sqlLog = $this->getDataSource()->getLog(false, false);
+		debug($sqlLog , false);
+		return $workLine;
+	}
+
+
+	/**
+	 * ログアウト忘れと思われる勤務履歴を更新
+	 * (更新日時はバッチを回したとき。ステータスは3にする)
+	 *
+	 * @param unknown $workData
+	 */
+	public function updateForgetWorkLine($workData) {
+
+		foreach ( $workData as $workline ) {
+			$record = array ();
+			$record = array (
+					"id" => $workline ["Worktime"] ["id"],
+					"end_time" => date ( "Y-m-d H:i:s" ),
+					"workstatus" => "3"
+			);
+			$this->create ();
+			$this->save ( $record );
+			$sqlLog = $this->getDataSource()->getLog(false, false);
+			debug($sqlLog , false);
+		}
+	}
+
+	/**
 	 * あるユーザーの勤務履歴を取得
 	 *
 	 * @param unknown $userId

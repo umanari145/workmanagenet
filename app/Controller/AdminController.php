@@ -152,8 +152,7 @@ class AdminController extends AppController {
 		if($this->request->is('ajax')){
 			$data = $this->request->data;
 			if ($this->Worktime->save ( $data )) {
-
-				echo json_encode($value);
+				echo "success";
 			}else{
 				echo "fail";
 			}

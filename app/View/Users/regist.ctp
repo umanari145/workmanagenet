@@ -1,4 +1,4 @@
-	<?php	if($worktimeStatusArray ["workstatus"] === 2) echo "勤務開始時間　<div id='start_time'>". date( "Y年n月d日 H時m時s秒", strtotime($workTimeData["Worktime"]["start_time"])) ."</div>" ;?>
+	<?php	if($worktimeStatusArray ["workstatus"] === 2) echo "勤務開始時間　<div id='start_time'>". date( "Y年m月d日 H時i時s秒", strtotime($workTimeData["Worktime"]["start_time"])) ."</div>" ;?>
 
 <div date-role="fieldcontain">
 	<fieldset data-role="controlgroup">
