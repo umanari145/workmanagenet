@@ -4,11 +4,11 @@ class Sendmail{
 
 	public function sendGridMail(){
 		$sendgrid = new SendGrid( EMAIL_USER_NAME, EMAIL_PASSWORD );
-		$email = new SendGrid\Email();
-		$email->addTo('umanari145@gmail.com')->
-		setFrom('matsumoto@donow.jp')->
-		setSubject('件名')->
-		setText('こんにちは！');
+		$emaill = new SendGridEmail();
+		$email ->addTo('umanari145@gmail.coom')->
+		    setFrom('matsumoto@donow.jp')->
+		    setSubject('Subject test')->
+		    setText('Hello World!');
 		$sendgrid->send($email);
 	}
 
