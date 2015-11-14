@@ -2,16 +2,20 @@
 
 class Sendmail{
 
-	public function sendGridMail(){
+	/**
+	 * メール送信プログラム(heroku用:sendgrid)
+	 *
+	 * @param unknown $title タイトル
+	 * @param unknown $mailMessage メールのメッセージ
+	 */
+	public function sendGridMail($title,$mailMessage){
 		$sendgrid = new SendGrid(getenv('SENDGRID_USERNAME'), getenv('SENDGRID_PASSWORD'));
 		$email = new SendGrid\Email();
-		$email ->addTo('umanari145@gmail.com')->
-		    setFrom('matsumoto@donow.jp')->
-		    setSubject('Subject test')->
-		    setText('Hello World!');
-		var_dump($email);
+		$email ->addTo(ADMIN_EMAIL_ADDRESS)->
+		    setFrom(ADMIN_EMAIL_ADDRESS)->
+		    setSubject($title)->
+		    setText($mailMessage);
 		$res=$sendgrid->send($email);
-		var_dump($res);
 	}
 
 	public function showEcho(){

@@ -44,7 +44,6 @@ class UsersController extends AppController {
 		}
 		if ($this->request->is ( 'post' )) {
 			if ($this->Auth->login ()) {
-
 				$this->redirect ( $this->Auth->redirect () );
 			} else {
 				$this->Session->setFlash ( 'ログインに失敗しました。正しいユーザー名とパスワードを入力してください。', 'default', array (), 'auth' );
@@ -58,6 +57,7 @@ class UsersController extends AppController {
 	 * @throws NotFoundException
 	 */
 	public function regist() {
+
 		$userId = $this->Auth->user ( 'id' );
 
 		$user = $this->Auth->user ();
@@ -66,16 +66,17 @@ class UsersController extends AppController {
 		}
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
-			if ($this->Worktime->save ( $this->request->data )) {
 
+			if ($this->Worktime->save ( $this->request->data )) {
 			}
+
 		}
 
 		$workTimeData = $this->Worktime->checkWorktimeData ( $userId );
 		$worktimeStatusArray = $this->Worktime->getStatusMessage ( $workTimeData );
 		$this->set ( "worktimeStatusArray", $worktimeStatusArray );
 		$this->set ( "workTimeData", $workTimeData );
-			// 直前まで使っていた部屋を初期設定にする
+		// 直前まで使っていた部屋を初期設定にする
 		if ($worktimeStatusArray ["workstatus"] === 1) {
 			$workLine = $this->Worktime->getWorkLineByUserId ( $userId );
 			if (! empty ( $workLine )) {

@@ -163,13 +163,7 @@ class AdminController extends AppController {
 
 
 	public function beforeFilter() {
-		$this->Auth->allow ( 'login', 'logout',"sendmail");
-	}
-
-	public function sendmail(){
-		$sendmail = new Sendmail();
-		$sendmail->sendGridMail();
-		exit;
+		$this->Auth->allow ( 'login', 'logout');
 	}
 
 	/**

@@ -1,5 +1,7 @@
 <?php
 App::uses ( 'AppModel', 'Model' );
+App::import('Vendor', 'util/sendmail');
+
 class Worktime extends AppModel {
 	public $name = 'Worktime';
 	public $belongsTo = array (
@@ -47,6 +49,14 @@ class Worktime extends AppModel {
 			$worktimeStatusArray ['javascript'] = array ();
 		}
 		return $worktimeStatusArray;
+	}
+
+	public function sendWorkMail( $registData ){
+		var_dump($registData);
+
+		//$sendmail = new Sendmail();
+		//$sendmail->sendGridMail($title, $mailMessage);
+
 	}
 
 	/**
