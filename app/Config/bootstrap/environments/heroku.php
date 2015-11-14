@@ -6,6 +6,9 @@ Environment::configure('heroku', true, [
 
     define("ENTRY_URL","https://fm-liveworks.herokuapp.com/");
 
+    define("EMAIL_USER_NAME","app43237871@heroku.com");
+    define("EMAIL_PASSWORD","icandonow99");
+
     CakeLog::config('debug', array(
         'engine' => 'File',
         'types' => array('notice', 'info', 'debug'),

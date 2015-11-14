@@ -1,5 +1,7 @@
 <?php
 App::uses ( 'AppController', 'Controller' );
+App::import('Vendor', 'util/sendmail');
+
 class AdminController extends AppController {
 
 	public $helpers = array('Html', 'Form','Customize');
@@ -161,7 +163,13 @@ class AdminController extends AppController {
 
 
 	public function beforeFilter() {
-		$this->Auth->allow ( 'login', 'logout');
+		$this->Auth->allow ( 'login', 'logout',"sendmail");
+	}
+
+	public function sendmail(){
+		$sendmail = new Sendmail();
+		$sendmail->sendGridMail();
+		exit;
 	}
 
 	/**
