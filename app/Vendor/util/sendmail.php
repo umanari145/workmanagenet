@@ -5,7 +5,7 @@ class Sendmail{
 	public function sendGridMail(){
 		$sendgrid = new SendGrid(getenv('SENDGRID_USERNAME'), getenv('SENDGRID_PASSWORD'));
 		$email = new SendGrid\Email();
-		$email ->addTo('umanari145@gmail.coom')->
+		$email ->addTo('umanari145@gmail.com')->
 		    setFrom('matsumoto@donow.jp')->
 		    setSubject('Subject test')->
 		    setText('Hello World!');
