@@ -3,7 +3,7 @@
 class Sendmail{
 
 	public function sendGridMail(){
-		$sendgrid = new SendGrid( EMAIL_USER_NAME, EMAIL_PASSWORD );
+		$sendgrid = new SendGrid(getenv('SENDGRID_USERNAME'), getenv('SENDGRID_PASSWORD'));
 		$email = new SendGrid\Email();
 		$email ->addTo('umanari145@gmail.coom')->
 		    setFrom('matsumoto@donow.jp')->
