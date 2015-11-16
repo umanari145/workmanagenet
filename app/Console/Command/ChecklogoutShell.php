@@ -18,6 +18,7 @@ class ChecklogoutShell extends AppShell {
 	public function main() {
 		$this->out ( "start_batch" );
 		$this->out ( date ( "Y-m-d H:i:s" ) );
+		$this->testEcho();
 		$this->out ( date ( "Y-m-d H:i:s" ) );
 		$this->out ( "last_batch" );
 	}
@@ -30,6 +31,10 @@ class ChecklogoutShell extends AppShell {
 		if (! empty ( $forgetWorkData )) {
 			$this->Worktime->updateForgetWorkLine ( $forgetWorkData );
 		}
+	}
+
+	public function testEcho(){
+		echo "test dayo";
 	}
 
 }
