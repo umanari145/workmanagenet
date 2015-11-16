@@ -84,7 +84,8 @@ class Worktime extends AppModel {
 				break;
 		}
 
-		$mailMessage = "スタッフ名:" . $staffName . "さん\r\n ". "勤務状態:" . $headMessage . "\r\n" . "時刻:" . $time . "\r\n" . "部屋名:" . $roomName;
+		$mailMessage = "スタッフ名:" . $staffName . "さん\r\n ". "勤務状態:" . $headMessage . "\r\n" . "時刻:" . $time;
+		$mailMessage .=" \r\n " . "部屋名:" . $roomName;
 		return $mailMessage;
 	}
 
