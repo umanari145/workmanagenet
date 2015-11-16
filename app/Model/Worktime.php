@@ -75,17 +75,21 @@ class Worktime extends AppModel {
 			case "1" :
 				$headMessage = "勤務開始";
 				$time = $workLineData ["Worktime"] ["start_time"];
+				$other="";
 				break;
 			case "2" :
 				$headMessage = "勤務終了";
 				$time = $workLineData ["Worktime"] ["start_time"];
+				$other =" \r\n " . "報告　" . $workLineData["Worktime"]["report"];
 				break;
 			default :
 				break;
 		}
 
-		$mailMessage = "スタッフ名:" . $staffName . "さん\r\n ". "勤務状態:" . $headMessage . "\r\n" . "時刻:" . $time;
-		$mailMessage .=" \r\n " . "部屋名:" . $roomName;
+		$mailMessage = "スタッフ名　" . $staffName . "さん\r\n ". "勤務状態　" . $headMessage . "\r\n" . "時刻　" . $time;
+		$mailMessage .=" \r\n " . "部屋名　" . $roomName;
+		$mailMessage .= $other;
+
 		return $mailMessage;
 	}
 
