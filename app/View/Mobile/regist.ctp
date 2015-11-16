@@ -1,7 +1,7 @@
 	<?php	if($worktimeStatusArray ["workstatus"] === 2) echo "勤務開始時間　<div id='start_time'>". date( "Y年m月d日 H時i時s秒", strtotime($workTimeData["Worktime"]["start_time"])) ."</div>" ;?>
 
-
-	<div>
+<div date-role="fieldcontain">
+	<fieldset data-role="controlgroup">
 		<p><?php echo $userInfo["japanese_name"]; ?></p>
 		<p>
 	<?php
@@ -76,5 +76,5 @@
     <?php echo $this->Form->button($worktimeStatusArray["statusMessage"],$worktimeStatusArray["javascript"]); ?>
 
     <?php echo $this->Form->end(); ?>
-     </div>
+     </fieldset>
 </div>

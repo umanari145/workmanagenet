@@ -10,7 +10,7 @@ class UsersController extends AppController {
 			'Room'
 	);
 
-	public $layout    = 'mobile';
+	public $layout    = 'user';
 
 	public $components = array (
 			'Session',
@@ -66,10 +66,14 @@ class UsersController extends AppController {
 		}
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
-
 			if ($this->Worktime->save ( $this->request->data )) {
-			}
 
+				$worktimeId = $this->Worktime->getLastInsertID();
+				if( empty( $worktimeId)){
+					$worktimeId  = $this->request->data["Worktime"]["id"];
+				}
+				$this->Worktime->sendWorkMail($worktimeId );
+			}
 		}
 
 		$workTimeData = $this->Worktime->checkWorktimeData ( $userId );

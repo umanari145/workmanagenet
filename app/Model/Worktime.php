@@ -51,13 +51,44 @@ class Worktime extends AppModel {
 		return $worktimeStatusArray;
 	}
 
-	public function sendWorkMail( $registData ){
-		var_dump($registData);
-
-		//$sendmail = new Sendmail();
-		//$sendmail->sendGridMail($title, $mailMessage);
-
+	public function sendWorkMail($worktimeId ) {
+		$workLineData = $this->find ( 'first', array (
+				'conditions' => array (
+						'Worktime.id' => $worktimeId
+				)
+		) );
+		$mailmessage = $this->makeWorkMailMessage($workLineData);
+		$sendmail = new Sendmail();
+		$sendmail->sendGridMail("勤務報告メール", $mailmessage);
 	}
+
+	/**
+	 * 勤務報告メールの文面
+	 *
+	 * @param unknown $workLineData 勤務状態
+	 * @return string
+	 */
+	private function makeWorkMailMessage($workLineData) {
+		$staffName = $workLineData ["User"] ["japanese_name"];
+		$roomName = $workLineData ["Room"] ["room_name"];
+		switch ($workLineData["Worktime"]["workstatus"]) {
+			case "1" :
+				$headMessage = "勤務開始";
+				$time = $workLineData ["Worktime"] ["start_time"];
+				break;
+			case "2" :
+				$headMessage = "勤務終了";
+				$time = $workLineData ["Worktime"] ["start_time"];
+				break;
+			default :
+				break;
+		}
+
+		$mailMessage = "スタッフ名:" . $staffName . "さん\n" . "勤務状態:" . $headMessage . "\n" . "時刻:" . $time . "\n" . "部屋名:" . $roomName;
+		return $mailMessage;
+	}
+
+
 
 	/**
 	 * 勤務時間の履歴を取得
@@ -68,7 +99,7 @@ class Worktime extends AppModel {
 	 */
 	public function getWorkLine($existUserList = array()) {
 		$workLine = $this->find ( 'all', array (
-				'order' => array (
+				'order'=> array (
 						'Worktime.start_time DESC'
 				)
 		)

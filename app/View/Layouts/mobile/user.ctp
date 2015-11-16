@@ -23,15 +23,16 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 <html>
 <head>
 	<?php echo $this->Html->charset(); ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>
-		勤怠管理アプリ管理画面
+		勤怠管理アプリ
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
-		echo $this->Html->css('admin');
+		echo $this->Html->css('jquery.mobile-1.4.5.min');
 		echo $this->Html->script('jquery-1.10.2.min');
-		echo $this->Html->script('custom');
-		echo $this->Html->script('sortable');
+		echo $this->Html->script('jquery.mobile-1.4.5.min');
+		echo $this->Html->script('sugar.min');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
@@ -39,21 +40,18 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 </head>
 <body>
 	<div id="container">
-		<input type="hidden" id="entry_url" value="<?php echo ENTRY_URL; ?>">
 		<div id="header">
-			<h1>勤怠管理アプリ管理画面</h1>
+			<h1>勤怠管理アプリ</h1>
 		</div>
 		<div id="content">
-
 			<?php echo $this->Session->flash(); ?>
 			<?php echo $this->fetch('content'); ?>
 		</div>
 		<div id="footer">
 			<p>
-				勤怠管理アプリ管理画面
 			</p>
 		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
+	<?php //echo $this->element('sql_dump'); ?>
 </body>
 </html>
