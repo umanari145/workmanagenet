@@ -18,7 +18,4 @@ class Sendmail{
 		$res=$sendgrid->send($email);
 	}
 
-	public function showEcho(){
-		echo "success";
-	}
 }

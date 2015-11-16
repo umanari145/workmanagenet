@@ -34,7 +34,7 @@ class ChecklogoutShell extends AppShell {
 	}
 
 	public function testEcho(){
-		echo "test dayo";
+		echo __DIR__;
 	}
 
 }
