@@ -1,6 +1,9 @@
 <?php
 
-require_once '../Vendor/autoload.php';
+$currentDir = __DIR__;
+$currentDirUp = dirname($currentDir);
+
+require_once $currentDirUp . '/Vendor/autoload.php';
 
 include __DIR__ .'/bootstrap/environments.php';
 
