@@ -1,11 +1,12 @@
 <?php
 App::uses ( 'AppController', 'Controller' );
-App::import('Vendor', 'util/sendmail');
-
+App::import ( 'Vendor', 'util/sendmail' );
 class AdminController extends AppController {
-
-	public $helpers = array('Html', 'Form','Customize');
-
+	public $helpers = array (
+			'Html',
+			'Form',
+			'Customize'
+	);
 	public $uses = array (
 			'Admin',
 			'User',
@@ -13,9 +14,7 @@ class AdminController extends AppController {
 			'Activeworktime',
 			'Room'
 	);
-
-	public $layout ="admin";
-
+	public $layout = "admin";
 	public $components = array (
 			'Session',
 			'Cookie',
@@ -31,21 +30,21 @@ class AdminController extends AppController {
 					'loginAction' => array (
 							'controller' => 'admin',
 							'action' => 'login'
-					),//テーブル名がuserでないときは↓下記のように設定します。
-					'authenticate' => array(
-							'Form' => array(
+					), // テーブル名がuserでないときは↓下記のように設定します。
+					'authenticate' => array (
+							'Form' => array (
 									'userModel' => 'Admin'
 							)
 					)
-					)
-			);
+			)
+	);
 
 	/**
 	 * スタッフユーザー一覧の取得
 	 */
-	public function userindex(){
-		$this->set('users',$this->User->getUserData());
-		$this->render('userindex');
+	public function userindex() {
+		$this->set ( 'users', $this->User->getUserData () );
+		$this->render ( 'userindex' );
 	}
 
 	/**
@@ -66,7 +65,6 @@ class AdminController extends AppController {
 		}
 		$this->render ( 'userregist' );
 	}
-
 
 	/**
 	 * スタッフユーザーの情報を更新
@@ -91,7 +89,7 @@ class AdminController extends AppController {
 				$this->Session->setFlash ( __ ( 'スタッフの情報をを編集することができませんでした。もう一度実行してください。' ) );
 			}
 		} else {
-			$this->request->data = $this->User->getSingleUserData( $id );
+			$this->request->data = $this->User->getSingleUserData ( $id );
 		}
 		$this->render ( 'userregist' );
 	}
@@ -115,7 +113,7 @@ class AdminController extends AppController {
 				"is_delete" => 1
 		);
 
-		if ($this->User->save( $data)) {
+		if ($this->User->save ( $data )) {
 			$this->Session->setFlash ( 'スタッフの削除が完了しました。' );
 			$this->redirect ( array (
 					'action' => 'userindex'
@@ -126,84 +124,108 @@ class AdminController extends AppController {
 		$this->render ( 'userindex' );
 	}
 
-
 	/**
 	 * 勤務一覧情報を出力
 	 */
-	public function userworkdata(){
-		$this->set("workLine",$this->Worktime->getWorkLine());
+	public function userworkdata() {
+		$this->set ( "workLine", $this->Worktime->getWorkLine () );
 	}
 
 	/**
 	 * 勤務履歴詳細データを表示
 	 *
-	 * @param string $id 勤務履歴id
+	 * @param string $id
+	 *        	勤務履歴id
 	 * @throws NotFoundException
 	 */
-	public function workdetail( $id = null){
+	public function workdetail($id = null) {
 		$this->Worktime->id = $id;
 		if (! $this->Worktime->exists ()) {
 			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
 		}
-		$workDetailData = $this->Worktime->find('first',array("conditions"=>array("Worktime.id"=>$id)));
-		$this->Worktime->calcWorkTimeFromStartToEnd( $workDetailData );
-		$this->set("workdetail",$workDetailData);
+		$workDetailData = $this->Worktime->find ( 'first', array (
+				"conditions" => array (
+						"Worktime.id" => $id
+				)
+		) );
+		$this->Worktime->calcWorkTimeFromStartToEnd ( $workDetailData );
+		$this->set ( "workdetail", $workDetailData );
 	}
 
-
+	/**
+	 * 稼働履歴CSVアップロード
+	 */
 	public function activeworkcsvupload() {
 		if ($this->request->is ( 'post' )) {
-
-			$filename = $this->request->data["Activeworktime"]["CsvFile"]["tmp_name"];
+			$filename = $this->request->data ["Activeworktime"] ["CsvFile"] ["tmp_name"];
 			if (file_exists ( $filename )) {
 				$db = $this->Activeworktime->getDataSource ();
 				$db->begin ( $this->Activeworktime );
 				$this->Activeworktime->importCSV ( $filename );
-				if (!$this->Activeworktime->getImportErrors ()) {
+				if (! $this->Activeworktime->getImportErrors ()) {
 					$db->commit ( $this->Activeworktime );
-					$this->Session->setFlash ( __ ( 'CSV登録に成功しました。') );
+					$this->Session->setFlash ( __ ( 'CSV登録に成功しました。' ) );
 				} else {
 					$db->rollback ( $this->Activeworktime );
-					$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。') );
+					$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。' ) );
 				}
 			} else {
-				$this->Session->setFlash ( __ ( 'ファイルが存在していません。') );
+				$this->Session->setFlash ( __ ( 'ファイルが存在していません。' ) );
 			}
 		}
 		$this->render ( "acitiveworkcsvupload" );
 	}
 
+	/**
+	 * 稼働履歴一覧
+	 */
+	public function useractiveworkdata() {
 
-	public function updateworkdata(){
+		$activeWorkData = $this->Activeworktime->find ( 'all' );
+		$this->set ( "activeWorkData", $activeWorkData );
+	}
+
+	public function downloadCsv(){
+		$this->autoRender = false;
+		//$this->response->type('Content-Type: text/csv');
+		//$this->response->download('sample.csv');
+		$data = $this->Activeworktime->exportCSV();
+		var_dump($data);
+		exit;
+		$this->response->body("aa");
+	}
+
+
+	/**
+	 * 勤務時間の修正のajax
+	 */
+	public function updateworkdata() {
 		$this->autoRender = FALSE;
-		if($this->request->is('ajax')){
+		if ($this->request->is ( 'ajax' )) {
 			$data = $this->request->data;
 			if ($this->Worktime->save ( $data )) {
 				echo "success";
-			}else{
+			} else {
 				echo "fail";
 			}
 		}
 	}
-
-
 	public function beforeFilter() {
-		$this->Auth->allow ( 'login', 'logout');
+		$this->Auth->allow ( 'login', 'logout' );
 	}
 
 	/**
 	 * ログイン時に入る管理画面のトップ
 	 */
-	public function index(){
-
+	public function index() {
 	}
 
 	/**
 	 * 部屋一覧の取得
 	 */
-	public function roomindex(){
-		$this->set('rooms',$this->Room->getRoomData());
-		$this->render('roomindex');
+	public function roomindex() {
+		$this->set ( 'rooms', $this->Room->getRoomData () );
+		$this->render ( 'roomindex' );
 	}
 
 	/**
@@ -218,14 +240,12 @@ class AdminController extends AppController {
 				$this->redirect ( array (
 						'action' => 'roomindex'
 				) );
-
 			} else {
 				$this->Session->setFlash ( '登録に失敗しました。' );
 			}
 		}
 		$this->render ( 'roomregist' );
 	}
-
 
 	/**
 	 * 部屋の情報を更新
@@ -285,13 +305,10 @@ class AdminController extends AppController {
 		$this->render ( 'roomindex' );
 	}
 
-
-
 	/**
 	 * ログインメソッド
 	 */
 	public function login() {
-
 		if ($this->Auth->loggedIn ()) {
 			$this->redirect ( $this->Auth->redirect () );
 		}

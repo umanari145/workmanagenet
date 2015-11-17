@@ -7,7 +7,8 @@ class Activeworktime extends AppModel {
 	var $actsAs = array(
 			'CsvImport' => array(
 					'delimiter'  => ',',
-			)
+			),
+			'CsvExport'
 	);
 
 	public $belongsTo = array (
