@@ -10,6 +10,7 @@ class AdminController extends AppController {
 			'Admin',
 			'User',
 			'Worktime',
+			'Activeworktime',
 			'Room'
 	);
 
@@ -149,6 +150,30 @@ class AdminController extends AppController {
 		$this->set("workdetail",$workDetailData);
 	}
 
+
+	public function activeworkcsvupload() {
+		if ($this->request->is ( 'post' )) {
+
+			$filename = $this->request->data["Activeworktime"]["CsvFile"]["tmp_name"];
+			if (file_exists ( $filename )) {
+				$db = $this->Activeworktime->getDataSource ();
+				$db->begin ( $this->Activeworktime );
+				$this->Activeworktime->importCSV ( $filename );
+				if (!$this->Activeworktime->getImportErrors ()) {
+					$db->commit ( $this->Activeworktime );
+					$this->Session->setFlash ( __ ( 'CSV登録に成功しました。') );
+				} else {
+					$db->rollback ( $this->Activeworktime );
+					$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。') );
+				}
+			} else {
+				$this->Session->setFlash ( __ ( 'ファイルが存在していません。') );
+			}
+		}
+		$this->render ( "acitiveworkcsvupload" );
+	}
+
+
 	public function updateworkdata(){
 		$this->autoRender = FALSE;
 		if($this->request->is('ajax')){
@@ -259,6 +284,7 @@ class AdminController extends AppController {
 		}
 		$this->render ( 'roomindex' );
 	}
+
 
 
 	/**
