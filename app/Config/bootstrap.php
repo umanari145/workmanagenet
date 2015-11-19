@@ -16,3 +16,5 @@ Configure::write('Dispatcher.filters', array(
     'AssetDispatcher',
     'CacheDispatcher'
 ));
+
+CakePlugin::load(array('Migrations'));
