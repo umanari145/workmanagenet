@@ -80,6 +80,8 @@ class AdminController extends AppController {
 		}
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
+
+
 			if ($this->User->save ( $this->request->data )) {
 				$this->Session->setFlash ( __ ( 'スタッフの編集が成功しました。' ) );
 				$this->redirect ( array (

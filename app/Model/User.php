@@ -154,9 +154,11 @@ class User extends AppModel {
 		$conditions = array (
 				'fields' => array (
 						'id',
+						'character_id',
 						'username',
 						'japanese_name',
-						'email'
+						'email',
+						'transfer_account'
 				),
 				'conditions' => array (
 						'User.id' => $id

@@ -8,7 +8,7 @@
 		echo $this->Form->input('japanese_name',array('label'=>'名前'));
 		echo $this->Form->input('email',array('label'=>'メールアドレス' ));
 		echo $this->Form->input('password',array('label'=>'パスワード'));
-		echo $this->Form->input('transfer_accoun',array('label'=>'口座情報'));
+		echo $this->Form->input('transfer_account',array('label'=>'口座情報'));
 	?>
 	</fieldset>
 <input type="submit" value="登録する">
