@@ -159,22 +159,27 @@ class AdminController extends AppController {
 	 */
 	public function activeworkcsvupload() {
 		if ($this->request->is ( 'post' )) {
-			$filename = $this->request->data ["Activeworktime"] ["CsvFile"] ["tmp_name"];
-			if (file_exists ( $filename )) {
-				$db = $this->Activeworktime->getDataSource ();
-				$db->begin ( $this->Activeworktime );
-				$this->Activeworktime->importCSV ( $filename );
-				if (! $this->Activeworktime->getImportErrors ()) {
-					$db->commit ( $this->Activeworktime );
-					$this->Session->setFlash ( __ ( 'CSV登録に成功しました。' ) );
+			try {
+				$filename = $this->request->data ["Activeworktime"] ["CsvFile"] ["tmp_name"];
+				if (file_exists ( $filename )) {
+					$db = $this->Activeworktime->getDataSource ();
+					$db->begin ( $this->Activeworktime );
+					$this->Activeworktime->importCSV ( $filename );
+					if (! $this->Activeworktime->getImportErrors ()) {
+						$db->commit ( $this->Activeworktime );
+						$this->Session->setFlash ( __ ( 'CSV登録に成功しました。' ) );
+					} else {
+						$db->rollback ( $this->Activeworktime );
+						$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。' ) );
+					}
 				} else {
-					$db->rollback ( $this->Activeworktime );
-					$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。' ) );
+					$this->Session->setFlash ( __ ( 'ファイルが存在していません。' ) );
 				}
-			} else {
-				$this->Session->setFlash ( __ ( 'ファイルが存在していません。' ) );
+			} catch ( Exception $e ) {
+				$this->Session->setFlash ( __ ( $e->getMessage () ) );
 			}
 		}
+
 		$this->render ( "acitiveworkcsvupload" );
 	}
 

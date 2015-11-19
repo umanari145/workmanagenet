@@ -16,16 +16,19 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 ?>
-<h2><?php echo $message; ?></h2>
-<p class="error">
+
+<div class="items">
+	<h2><?php echo $message; ?></h2>
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
+
 	<?php printf(
 		__d('cake', 'The requested address %s was not found on this server.'),
 		"<strong>'{$url}'</strong>"
 	); ?>
-</p>
+</div>
+<?php echo $this->element('left'); ?>
 <?php
 if (Configure::read('debug') > 0):
-	echo $this->element('exception_stack_trace');
+	//echo $this->element('exception_stack_trace');
 endif;
 ?>
