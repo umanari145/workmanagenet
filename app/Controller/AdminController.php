@@ -159,7 +159,9 @@ class AdminController extends AppController {
 	 */
 	public function activeworkcsvupload() {
 		if ($this->request->is ( 'post' )) {
+
 			try {
+
 				$filename = $this->request->data ["Activeworktime"] ["CsvFile"] ["tmp_name"];
 				if (file_exists ( $filename )) {
 					$db = $this->Activeworktime->getDataSource ();
@@ -175,6 +177,7 @@ class AdminController extends AppController {
 				} else {
 					$this->Session->setFlash ( __ ( 'ファイルが存在していません。' ) );
 				}
+
 			} catch ( Exception $e ) {
 				$this->Session->setFlash ( __ ( $e->getMessage () ) );
 			}

@@ -109,6 +109,12 @@ class CsvImportBehavior extends ModelBehavior {
 		$saved = array();
 		$i = 0;
 		while (($row = $this->_getCSVLine($Model, $handle)) !== false) {
+
+
+			if( is_null($row[0])){
+				continue;
+			}
+
 			$data = array();
 			foreach ($header as $k => $col) {
 				// get the data field from Model.field
