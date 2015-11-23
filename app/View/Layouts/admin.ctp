@@ -26,6 +26,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<title>
 		勤怠管理アプリ管理画面
 	</title>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css">
+
 	<?php
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('admin');
@@ -36,6 +38,15 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+
+    <script>
+    $(function() {
+        $(".datepicker").datepicker();
+      });
+    </script>
 </head>
 <body>
 	<div id="container">

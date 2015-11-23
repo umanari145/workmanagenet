@@ -15,6 +15,7 @@ class AppSchema extends CakeSchema {
 		'end' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'point' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'reward' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'account_statues' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 6, 'unsigned' => false),
 		'is_delete' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)

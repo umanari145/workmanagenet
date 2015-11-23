@@ -190,19 +190,35 @@ class AdminController extends AppController {
 	 * 稼働履歴一覧
 	 */
 	public function useractiveworkdata() {
+		if (! empty ( $this->request->query )) {
 
-		$activeWorkData = $this->Activeworktime->find ( 'all' );
+			// 集計
+			if (! empty ( $this->request->query ["aggregate"] )) {
+				$activeWorkData = $this->Activeworktime->findActiveWorkDataByQuery ( $this->request->query );
+			}
+
+			// ダウンロード
+			if (! empty ( $this->request->query ["download"] )) {
+				$this->autoRender=false;
+				$downloadData = array();
+				$downloadData = $this->Activeworktime->getPointGroupingUser ($this->request->query );
+				$bodyData = $this->Activeworktime->exportCSV ( $downloadData );
+				$csvFileName=$this->Activeworktime->makeActiveWorkFileName($this->request->query);
+ 				// アクセスした時にダウンロードさせる為のヘッダを設定します。
+			    header ("Content-disposition: attachment; filename=" . $csvFileName);
+			    header ("Content-type: application/octet-stream; name=" . $csvFileName);
+			    // バッファを出力して完成です。
+			    print($bodyData);
+			    exit;
+			}
+		} else {
+			$activeWorkData = $this->Activeworktime->find ( 'all' );
+			$this->request->query ["aggregate_start_date"] = "";
+			$this->request->query ["aggregate_end_date"] = "";
+		}
+
+		$this->set ( 'query', $this->request->query );
 		$this->set ( "activeWorkData", $activeWorkData );
-	}
-
-	public function downloadCsv(){
-		$this->autoRender = false;
-		//$this->response->type('Content-Type: text/csv');
-		//$this->response->download('sample.csv');
-		$data = $this->Activeworktime->exportCSV();
-		var_dump($data);
-		exit;
-		$this->response->body("aa");
 	}
 
 

@@ -49,7 +49,7 @@ class CsvExportBehavior extends ModelBehavior {
  * @param array $settigs list of settings to be used for this model
  * @return void
  */
-	public function setup(Model &$Model, $settings = array()) {
+	public function setup(Model $Model, $settings = array()) {
 		if (!isset($this->settings[$Model->alias])) {
 			$this->settings[$Model->alias] = array(
                 'encoding' => 'utf8',
@@ -67,13 +67,19 @@ class CsvExportBehavior extends ModelBehavior {
  * @param Model $Model
  * @return string the csv data
  */
-    public function exportCSV(Model &$Model ) {
+    public function exportCSV(Model &$Model, $customizeData = array() ) {
         if( !ini_get('safe_mode') && ini_get('max_execution_time') < $this->settings[$Model->alias]['max_execution_time']  ){
             set_time_limit($this->settings[$Model->alias]['max_execution_time']); //Extend timout to 6 minutes for large data exports.
         }
 
         $Model->recursive = -1;
-        $records = $Model->find('all');
+
+        if( empty($customizeData)){
+        	$records = $Model->find('all');
+        }else{
+        	$records = $customizeData;
+        }
+
         if ( !empty($records ) ) {
             $this->ensureTmp();
 

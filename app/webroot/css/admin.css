@@ -327,6 +327,14 @@ input, textarea {
 	padding: 1%;
 	width:98%;
 }
+
+input.datepicker{
+	font-size:12px;
+	width:100px;
+}
+
+
+
 select {
 	clear: both;
 	font-size: 120%;
@@ -541,6 +549,7 @@ input[type=submit],
 	-webkit-user-select: none;
 	user-select: none;
 }
+
 .actions ul li a:hover,
 .actions a:hover {
 	background: #ededed;
@@ -564,6 +573,8 @@ input[type=submit]:active,
 	border-color: #aaa;
 	text-decoration: none;
 }
+
+
 
 /** Related **/
 .related {

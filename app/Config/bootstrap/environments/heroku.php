@@ -1,5 +1,5 @@
 <?php
-Environment::configure('heroku', true, [
+Environment::configure('heroku', false, [
 ], function () {
     // Heroku 用設定
 	    App::uses('CakeLog', 'Log');
