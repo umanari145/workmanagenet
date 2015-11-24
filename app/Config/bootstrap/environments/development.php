@@ -1,5 +1,5 @@
 <?php
-Environment::configure('development', true , [
+Environment::configure('development', false , [
 ], function () {
     // Log settings
     App::uses('CakeLog', 'Log');

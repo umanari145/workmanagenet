@@ -154,7 +154,7 @@ class User extends AppModel {
 		$conditions = array (
 				'fields' => array (
 						'id',
-						'character_id',
+						'chatgirl_id',
 						'username',
 						'japanese_name',
 						'email',

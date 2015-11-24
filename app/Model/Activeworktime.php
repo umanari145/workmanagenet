@@ -23,20 +23,20 @@ class Activeworktime extends AppModel {
 	 */
 	public function beforeSave($option = array()) {
 
-		if( empty ( $this->data ["Activeworktime"] ["character_id"] ) ){
+		if( empty ( $this->data ["Activeworktime"] ["chatgirl_id"] ) ){
 			throw new NotFoundException('character_idが存在しないデータが含まれています。');
 		}
 
 
-		if (! empty ( $this->data ["Activeworktime"] ["character_id"] ) && empty ( $this->data ["Activeworktime"] ["user_id"] )) {
+		if (! empty ( $this->data ["Activeworktime"] ["chatgirl_id"] ) && empty ( $this->data ["Activeworktime"] ["user_id"] )) {
 
-			$characterId = $this->data ["Activeworktime"] ["character_id"];
+			$chatGirlId = $this->data ["Activeworktime"] ["chatgirl_id"];
 
 			App::import ( 'Model', 'User' );
 			$UserModel = new User ();
 			$userData = $UserModel->find ( 'first', array (
 					'conditions' => array (
-							'User.character_id' => $characterId
+							'User.chatgirl_id' => $chatGirlId
 					)
 			) );
 

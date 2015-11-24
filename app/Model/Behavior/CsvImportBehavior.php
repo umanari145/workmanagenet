@@ -110,7 +110,6 @@ class CsvImportBehavior extends ModelBehavior {
 		$i = 0;
 		while (($row = $this->_getCSVLine($Model, $handle)) !== false) {
 
-
 			if( is_null($row[0])){
 				continue;
 			}
@@ -121,12 +120,12 @@ class CsvImportBehavior extends ModelBehavior {
 				if (strpos($col, '.') !== false) {
 					$keys = explode('.', $col);
 					if (isset($keys[2])) {
-						$data[$keys[0]][$keys[1]][$keys[2]]= (isset($row[$k])) ? $row[$k] : '';
+						$data[$keys[0]][$keys[1]][$keys[2]]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS"): '';
 					} else {
-						$data[$keys[0]][$keys[1]]= (isset($row[$k])) ? $row[$k] : '';
+						$data[$keys[0]][$keys[1]]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS") : '';
 					}
 				} else {
-					$data[$Model->alias][$col]= (isset($row[$k])) ? $row[$k] : '';
+					$data[$Model->alias][$col]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS") : '';
 				}
 			}
 
