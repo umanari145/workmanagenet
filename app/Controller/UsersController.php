@@ -7,7 +7,8 @@ class UsersController extends AppController {
 	public $uses = array (
 			'User',
 			'Worktime',
-			'Room'
+			'Room',
+			'Activeworktime'
 	);
 
 	public $layout    = 'user';
@@ -57,7 +58,6 @@ class UsersController extends AppController {
 	 * @throws NotFoundException
 	 */
 	public function regist() {
-
 		$userId = $this->Auth->user ( 'id' );
 
 		$user = $this->Auth->user ();
@@ -68,11 +68,11 @@ class UsersController extends AppController {
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
 			if ($this->Worktime->save ( $this->request->data )) {
 
-				$worktimeId = $this->Worktime->getLastInsertID();
-				if( empty( $worktimeId)){
-					$worktimeId  = $this->request->data["Worktime"]["id"];
+				$worktimeId = $this->Worktime->getLastInsertID ();
+				if (empty ( $worktimeId )) {
+					$worktimeId = $this->request->data ["Worktime"] ["id"];
 				}
-				$this->Worktime->sendWorkMail($worktimeId );
+				$this->Worktime->sendWorkMail ( $worktimeId );
 			}
 		}
 
@@ -88,6 +88,7 @@ class UsersController extends AppController {
 			}
 		}
 
+		$this->set ( "montlyReward", $this->Activeworktime->getMonthlyReward ( $userId ) );
 		$this->set ( "roomList", $this->Room->getRoomList () );
 		$this->set ( "userInfo", $this->Auth->user () );
 		$this->render ( 'regist' );

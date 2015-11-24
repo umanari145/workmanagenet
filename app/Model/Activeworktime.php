@@ -83,6 +83,40 @@ class Activeworktime extends AppModel {
 	}
 
 	/**
+	 * 今月の月の稼働時間、報酬、回数などを取得する
+	 *
+	 * @param unknown $userId
+	 * @return Ambigous <multitype:, NULL>
+	 */
+	public function getMonthlyReward($userId) {
+		$startTime = date ( "Y-m-d 00:00:00", strtotime ( date ( "Y-m-01" ) ) );
+		$endTime = date ( "Y-m-d H:i:s" );
+
+		$params = array (
+				'fields' => array (
+						'User.japanese_name',
+						'Activeworktime.user_id',
+						'MAX(Activeworktime.end) as last_active_time',
+						'COUNT(Activeworktime.id) as active_count',
+						'SUM(UNIX_TIMESTAMP(Activeworktime.end)-UNIX_TIMESTAMP(Activeworktime.begin)) as active_time',
+						'SUM(Activeworktime.point) as sum_point',
+						'SUM(Activeworktime.reward) as sum_reward'
+				),
+				'conditions' => array (
+						'Activeworktime.is_delete' => 0,
+						'Activeworktime.user_id' => $userId,
+						'Activeworktime.begin >= ' => $startTime,
+						'Activeworktime.end <= ' => $endTime
+				)
+		)
+		;
+
+		$activeWorktimeRecord = $this->find ( 'all', $params );
+		return $activeWorktimeRecord;
+	}
+
+
+	/**
 	 * csvダウンロード用にデータを加工
 	 *
 	 * @param unknown $activeWorkDataList

@@ -1,9 +1,43 @@
 	<?php	if($worktimeStatusArray ["workstatus"] === 2) echo "勤務開始時間　<div id='start_time'>". date( "Y年m月d日 H時i時s秒", strtotime($workTimeData["Worktime"]["start_time"])) ."</div>" ;?>
 
 
+
+
+<div>
+
+
+
+	<p><?php echo $userInfo["japanese_name"]; ?></p>
 	<div>
-		<p><?php echo $userInfo["japanese_name"]; ?></p>
-		<p>
+<?php if( !empty($montlyReward)):?>
+	<span>稼働データ(<?php echo $montlyReward[0][0]["last_active_time"];?> 付け )</span>
+
+		<dl>
+			<dt>総稼働時間:</dt>
+			<dd>
+	<?php
+	echo $this->Customize->convertSecondTohms ( $montlyReward [0] [0] ["active_time"] );
+	?>
+	</dd>
+
+			<dt>総獲得ポイント:</dt>
+			<dd>
+	<?php
+	echo $montlyReward [0] [0] ["sum_point"] . "ポイント";
+	?>
+	</dd>
+
+			<dt>総獲得報酬:</dt>
+			<dd>
+	<?php
+	echo $montlyReward [0] [0] ["sum_reward"] . "円";
+	?>
+	</dd>
+		</dl>
+<?php endif;?>
+</div>
+
+	<p>
 	<?php
 
 		echo $this->Html->link ( __ ( 'ログアウトする' ), array (
@@ -77,4 +111,5 @@
 
     <?php echo $this->Form->end(); ?>
      </div>
+
 </div>
