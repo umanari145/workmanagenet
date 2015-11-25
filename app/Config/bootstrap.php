@@ -9,7 +9,7 @@ include __DIR__ .'/bootstrap/environments.php';
 
 
 define("COMMENT_LENGTH", 20);
-define("ADMIN_EMAIL_ADDRESS","yamamoto@donow.jp");
+define("ADMIN_EMAIL_ADDRESS","info@plink-live.com");
 define("USER_REWARD_RATIO", 0.3 );
 
 Configure::write('Dispatcher.filters', array(
