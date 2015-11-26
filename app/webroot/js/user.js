@@ -2,37 +2,38 @@ $(function() {
 
 	var entryUrl = $("#entry_url").val();
 
-//	$("#room_id").change(function(){
-//
-//		var roomId =$("#room_id").val();
-//
-//		$.ajax({
-//			type : "POST",
-//			url : entryUrl+"user/reserveroom",
-//			data :"" ,
-//			success : function(res) {
-//
-//			}
-//		});
-//
-//	});
+	$("#UserRoomId").change(function(){
+		$("#room_change_form").submit();
+	});
 
 	$(".dialog").click(function(){
 
-
-
-		var user_id =$("#user_id").val();
-
 		var ele = $(this).attr("id").split("_");
 
-		$("#regist_room_id").val($("#room_id").val());
-		$("#regist_date_id").val(ele[1]);
-		$("#regist_date_disp_id").html(ele[1]);
+		var startDate=ele[1];
+		var startTime = ele[2].split("-")[0];
 
+
+		$("#regist_room_id").val($("#UserRoomId").val());
 		$("#regist_start_timeline_id").val(ele[2]);
-		var startLabel="開始時刻<br><span id='start_time_disp_id'>"+ ele[3]+"</span>";
 
-		$("#start_time_label_id").html(startLabel);
+		//開始時刻
+		var startTimeDisp=startDate +" "+ startTime;
+		$("#start_time_disp_id").html(startTimeDisp);
+		$("#start_time_hidden_id").val(startTimeDisp);
+
+		//終了時刻
+		var endDateStart = Date.create(startDate+ " " + startTime,"ja");
+
+		//削除しておかないと加算される
+		$("#end_time_pull_down_id option").remove();
+
+		for(var i=1;i<24;i++){
+			var optionEle =$("<option>");
+			var timeEle = (i).hoursAfter(endDateStart).format('{yyyy}/{MM}/{dd} {24hr}:00');
+			optionEle.append(timeEle).text(timeEle);
+			$("#end_time_pull_down_id").append(optionEle);
+		}
 
 		$("#time_question").dialog('open');
 
@@ -45,7 +46,7 @@ $(function() {
 		  modal: true,
 		  buttons: {
 		    "予約する": function(){
-		      $(this).dialog('close');
+		       $("#room_reserve_form").submit();
 		    }
 		  }
 		});

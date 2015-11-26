@@ -33,7 +33,7 @@ class Reserve extends AppModel {
 		$weekArr = array ();
 		for($i = 0; $i < 7; $i ++) {
 			$timelineArr = array ();
-			$dateVal = date ( "m/d", strtotime ( "+" . $i . "days" ) );
+			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "days" ) );
 			$weekArr [$dateVal] = array_fill(1,48, false);
 		}
 		return $weekArr;
@@ -47,7 +47,7 @@ class Reserve extends AppModel {
 		$weekArr=array();
 		for($i = 0; $i < 7; $i ++) {
 			$timelineArr = array ();
-			$dateVal = date ( "m/d", strtotime ( "+" . $i . "days" ) );
+			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "days" ) );
 			$weekArr[]=$dateVal;
 		}
 		return $weekArr;
@@ -62,7 +62,7 @@ class Reserve extends AppModel {
 				'fields' => array (
 						"room_id",
 						"user_id",
-						"DATE_FORMAT(reserve_date,'%m/%d') AS reserve_date",
+						"DATE_FORMAT(reserve_date,'%Y/%m/%d') AS reserve_date",
 						"timeline_id"
 				),
 				'conditions' => array (
@@ -88,5 +88,19 @@ class Reserve extends AppModel {
 				$roomScheduleeArr [$room_id] ["timeline"] [$reservedData] [$timeline_id] = true;
 			}
 		}
+	}
+
+	/**
+	 * 時間の配列を作成
+	 * @return multitype:string
+	 */
+	public function getTimeline() {
+		$masterTimelineArr = [ ];
+		for($i = 1; $i < 24; $i ++) {
+			$startTime = ($i - 1) . ":00";
+			$endTime = $i . ":00";
+			$masterTimelineArr [$i] = $startTime . "-" . $endTime;
+		}
+		return $masterTimelineArr;
 	}
 }

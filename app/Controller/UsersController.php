@@ -54,12 +54,11 @@ class UsersController extends AppController {
 		}
 	}
 
-
-
 	/**
 	 * 部屋の予約を行う
 	 */
-	public function reserveroom($roomId = "") {
+	public function reserveroom() {
+
 		$userId = $this->Auth->user ( 'id' );
 
 		$user = $this->Auth->user ();
@@ -70,15 +69,24 @@ class UsersController extends AppController {
 		$roomIdArr = $this->Room->getRoomList ();
 		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr );
 
+
+
 		if ($this->request->is ( 'post' )) {
-			// echo "test";
+			if( !empty($this->request->data ["User"])){
+				$roomId = $this->request->data ["User"] ["room_id"];
+			}else{
+				$roomId = $this->request->data["regist_room_id"];
+				var_dump($this->request->data);
+			}
+		} else {
+			$roomId = 1;
 		}
 
 		$this->set ( "roomList", $this->Room->getRoomList () );
 		$this->set ( "roomId", $roomId );
 		$this->set ( "weekArr", $this->Reserve->makeWeekArr () );
-		$this->set ( "masterTimelineArr", $this->Timeline->getTimeline () );
-		$this->set ( "roomScheduleeArr", $roomScheduleeArr );
+		$this->set ( "masterTimelineArr", $this->Reserve->getTimeline () );
+		$this->set ( "roomScheduleeArr", $roomScheduleeArr [$roomId] );
 		$this->set ( "userInfo", $this->Auth->user () );
 	}
 
