@@ -30,8 +30,11 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<?php
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('user');
+		echo $this->Html->css('jquery-ui.min');
 		echo $this->Html->script('jquery-1.10.2.min');
 		echo $this->Html->script('sugar.min');
+		echo $this->Html->script('jquery-ui.min');
+		echo $this->Html->script('user');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
@@ -43,6 +46,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 			<h1>勤怠管理アプリ</h1>
 		</div>
 		<div id="content">
+			<input type="hidden" id="entry_url" value="<?php echo ENTRY_URL; ?>">
 			<?php echo $this->Session->flash(); ?>
 			<?php echo $this->fetch('content'); ?>
 		</div>

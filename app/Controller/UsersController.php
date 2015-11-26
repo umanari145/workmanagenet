@@ -8,7 +8,9 @@ class UsersController extends AppController {
 			'User',
 			'Worktime',
 			'Room',
-			'Activeworktime'
+			'Activeworktime',
+			'Reserve',
+			'Timeline'
 	);
 
 	public $layout    = 'user';
@@ -52,6 +54,34 @@ class UsersController extends AppController {
 		}
 	}
 
+
+
+	/**
+	 * 部屋の予約を行う
+	 */
+	public function reserveroom($roomId = "") {
+		$userId = $this->Auth->user ( 'id' );
+
+		$user = $this->Auth->user ();
+		if (empty ( $user )) {
+			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+		}
+
+		$roomIdArr = $this->Room->getRoomList ();
+		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr );
+
+		if ($this->request->is ( 'post' )) {
+			// echo "test";
+		}
+
+		$this->set ( "roomList", $this->Room->getRoomList () );
+		$this->set ( "roomId", $roomId );
+		$this->set ( "weekArr", $this->Reserve->makeWeekArr () );
+		$this->set ( "masterTimelineArr", $this->Timeline->getTimeline () );
+		$this->set ( "roomScheduleeArr", $roomScheduleeArr );
+		$this->set ( "userInfo", $this->Auth->user () );
+	}
+
 	/**
 	 * ユーザーの時間の記録
 	 *
@@ -78,6 +108,7 @@ class UsersController extends AppController {
 
 		$workTimeData = $this->Worktime->checkWorktimeData ( $userId );
 		$worktimeStatusArray = $this->Worktime->getStatusMessage ( $workTimeData );
+
 		$this->set ( "worktimeStatusArray", $worktimeStatusArray );
 		$this->set ( "workTimeData", $workTimeData );
 		// 直前まで使っていた部屋を初期設定にする
