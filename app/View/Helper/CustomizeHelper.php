@@ -63,4 +63,52 @@ class CustomizeHelper extends AppHelper {
 		}
 		return $viewState;
 	}
+
+	/**
+	 * 曜日の表示
+	 *
+	 * @param unknown $viewDate yyyy/MM/dd型式の日付
+	 * @return unknown MM/dd 曜日(色つき)
+	 */
+	public function showDataWithWeek($viewDate) {
+		$viewDate2 = date ( 'm/d ', strtotime ( $viewDate ) );
+		$weekInt = date ( "N", strtotime ( $viewDate ) );
+		$viewWeek = "";
+		$cssColor = "";
+		switch ($weekInt) {
+			case '1' :
+				$viewWeek = "月";
+				break;
+			case '2' :
+				$viewWeek = "火";
+				break;
+			case '3' :
+				$viewWeek = "水";
+				break;
+			case '4' :
+				$viewWeek = "木";
+				break;
+			case '5' :
+				$viewWeek = "金";
+				break;
+			case '6' :
+				$viewWeek = "土";
+				$cssColor = "#0404B4";
+				break;
+			case '7' :
+				$viewWeek = "日";
+				$cssColor = "#FF0040";
+				break;
+			default :
+				break;
+		}
+
+		if (! empty ( $cssColor )) {
+			$viewHtml = "<span style='color:" . $cssColor . "';>" . $viewDate2 . $viewWeek . "</span>";
+		} else {
+			$viewHtml = "<span>" . $viewDate2 . $viewWeek . "</span>";
+		}
+
+		return $viewHtml;
+	}
 }

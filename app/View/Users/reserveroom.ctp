@@ -36,7 +36,7 @@ echo $this->Form->input ( 'room_id',array (
 		<?php foreach ($weekArr as $day):?>
 		<th>
 			<?php
-			echo $day;
+			echo $this->Customize->showDataWithWeek($day);
 			?>
 		</th>
 		<?php endforeach; ?>
@@ -45,11 +45,7 @@ echo $this->Form->input ( 'room_id',array (
 
 	<tr>
 
-
 	<?php foreach ($masterTimelineArr as $timelinId => $timelabel):?>
-
-
-
 	<tr>
 		<th>
 			<?php echo $timelabel;?>

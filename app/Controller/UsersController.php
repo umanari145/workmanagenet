@@ -94,6 +94,9 @@ class UsersController extends AppController {
 		$this->set ( "userInfo", $this->Auth->user () );
 	}
 
+	/**
+	 * ある特定の時間帯が予約可能か
+	 */
 	public function canReserveDate(){
 		$this->autoRender = FALSE;
 		if ($this->request->is ( 'ajax' )) {

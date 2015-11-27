@@ -18,7 +18,6 @@ class Reserve extends AppModel {
 					"timeline" => $this->makeRegularTimeLine ($roomId)
 			];
 		}
-
 		$reservedTimeline = $this->getReserveTimeline ();
 		$reservedTimeline2 = $this->convertReserveTime($reservedTimeline);
 		$this->checkIsReservedTimeline ( $roomScheduleeArr, $reservedTimeline2 );
@@ -37,6 +36,7 @@ class Reserve extends AppModel {
 			$weekArr [$dateVal] = array_fill(1,24, false);
 		}
 		return $weekArr;
+
 	}
 
 	/**
@@ -157,7 +157,7 @@ class Reserve extends AppModel {
 	 */
 	public function getTimeline() {
 		$masterTimelineArr = [ ];
-		for($i = 1; $i < 24; $i ++) {
+		for($i = 1; $i <= 24; $i ++) {
 			$startTime = ($i - 1) . ":00";
 			$endTime = $i . ":00";
 			$masterTimelineArr [$i] = $startTime . "-" . $endTime;

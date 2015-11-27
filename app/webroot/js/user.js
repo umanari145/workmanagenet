@@ -46,9 +46,8 @@ $(function() {
 		    	 if( errorMessage !== ""){
 		    		 $("#reserveRoomErrorMessage").html(errorMessage);
 		    	 }else{
-
 		    		 alert("success");
-		    	//$("#roomReserve").submit();
+		    		 $("#roomReserve").submit();
 		    	 }
 		    }
 		  }
@@ -81,10 +80,12 @@ $(function() {
 		}
 
 		// すでに予約済みでないか
-		if( canReserveDate(userId,roomId,startDateTime,endDateTime)){
+		if( canReserveDate(userId,roomId,startDateTime,endDateTime) === false){
 			errorMessage = "すでに予約済みの時間帯です。"
 			return errorMessage;
 		}
+
+		return errorMessage;
 	}
 
 	/**
@@ -113,27 +114,31 @@ $(function() {
 	 * @param endDateTime 終了時刻
 	 * @return true(OK)/false(不正)
 	 */
-	function canReserveDate(userId,roomId,startDateTime,endDateTime){
+	function canReserveDate(userId, roomId, startDateTime, endDateTime) {
 
-		var postData={
-				"user_id":userId,
-				"room_id":roomId,
-				"start_reserve_time":startDateTime,
-				"end_reserve_time":endDateTime
+		var postData = {
+			"user_id" : userId,
+			"room_id" : roomId,
+			"start_reserve_time" : startDateTime,
+			"end_reserve_time" : endDateTime
 		};
+
+		var canReserve;
 
 		$.ajax({
 			type : "POST",
-			url : entryUrl+"users/canReserveDate",
+			async:false,
+			url : entryUrl + "users/canReserveDate",
 			data : postData,
 			success : function(res) {
-				if( res === "fail"){
-					return false;
-				}else{
-					return true;
+				if (res === "fail") {
+					canReserve = false;
+				} else {
+					canReserve = true;
 				}
 			}
 		});
+		return canReserve;
 	}
 
 	$("#UserStartTimePullDownId").change(function(){
