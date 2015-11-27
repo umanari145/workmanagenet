@@ -10,18 +10,18 @@ class Reserve extends AppModel {
 	 * @return multitype:multitype:予約済みを含んだ一週間分のタイムスケジュール
 	 */
 	public function createAvailabelTime($roomIdArr) {
-
 		$roomScheduleeArr = array ();
 		foreach ( $roomIdArr as $roomId => $roomName ) {
 
 			$roomScheduleeArr [$roomId] = [
 					"room_name" => $roomName,
-					"timeline" => $this->makeRegularTimeLine ()
+					"timeline" => $this->makeRegularTimeLine ($roomId)
 			];
 		}
 
-		$reservedTimeline = $this->getReserveTimeline();
-		$this->checkIsReservedTimeline($roomScheduleeArr, $reservedTimeline);
+		$reservedTimeline = $this->getReserveTimeline ();
+		$reservedTimeline2 = $this->convertReserveTime($reservedTimeline);
+		$this->checkIsReservedTimeline ( $roomScheduleeArr, $reservedTimeline2 );
 		return $roomScheduleeArr;
 	}
 
@@ -34,7 +34,7 @@ class Reserve extends AppModel {
 		for($i = 0; $i < 7; $i ++) {
 			$timelineArr = array ();
 			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "days" ) );
-			$weekArr [$dateVal] = array_fill(1,48, false);
+			$weekArr [$dateVal] = array_fill(1,24, false);
 		}
 		return $weekArr;
 	}
@@ -62,11 +62,11 @@ class Reserve extends AppModel {
 				'fields' => array (
 						"room_id",
 						"user_id",
-						"DATE_FORMAT(reserve_date,'%Y/%m/%d') AS reserve_date",
-						"timeline_id"
+						"start_reserve_date",
+						"end_reserve_date"
 				),
 				'conditions' => array (
-						'Reserve.reserve_date >=' => date ( "Y/m/d" )
+						'Reserve.end_reserve_date >=' => date ( "Y/m/d" )
 				)
 		);
 		return $this->find ( 'all', $conditions );
@@ -82,12 +82,73 @@ class Reserve extends AppModel {
 		if (! empty ( $reservedTimeline )) {
 
 			foreach ( $reservedTimeline as $timeline ) {
-				$room_id = $timeline ["Reserve"] ["room_id"];
-				$timeline_id = $timeline ["Reserve"] ["timeline_id"];
-				$reservedData = $timeline [0] ["reserve_date"];
+				$room_id = $timeline  ["room_id"];
+				$timeline_id = $timeline  ["timeline_id"];
+				$reservedData = $timeline  ["reserve_date"];
 				$roomScheduleeArr [$room_id] ["timeline"] [$reservedData] [$timeline_id] = true;
 			}
 		}
+
+	}
+
+	/**
+	 * データベースのレコードを1時間単位の配列に区切り、処理しやすくする
+	 *
+	 * @param unknown $reservedTimeline 予約済みの時間軸
+	 * @return 変換後の予約済み配列
+	 */
+	private function convertReserveTime($reservedTimeline) {
+		$reservedTimeline2 = [ ];
+		foreach ( $reservedTimeline as $timeline ) {
+			$startDate = $timeline ["Reserve"] ["start_reserve_date"];
+			$endDate = $timeline ["Reserve"] ["end_reserve_date"];
+
+			$i = 1;
+			while ( true ) {
+
+				$addTime = date ( 'Y-m-d H:00:00', strtotime ( "+" . $i . " hour ", strtotime ( $startDate ) ) );
+				$timelineId = intval ( date ( 'H', strtotime ( $addTime ) ) );
+				$reserveDate = date ( 'Y/m/d', strtotime ( $addTime ) );
+				$i ++;
+
+				if ($timelineId === 0) {
+					$reserveDate = date ( "Y/m/d", strtotime ( "-1 day", strtotime ( $reserveDate ) ) );
+					$timelineId = 24;
+				}
+
+				$reservedTimelineChildren = [
+						'user_id' => $timeline ["Reserve"] ["user_id"],
+						'room_id' => $timeline ["Reserve"] ["room_id"],
+						'reserve_date' => $reserveDate,
+						'timeline_id' => $timelineId
+				];
+
+				$reservedTimeline2 [] = $reservedTimelineChildren;
+				if ($addTime === $endDate) {
+					break;
+				}
+			}
+		}
+
+		return $reservedTimeline2;
+	}
+
+	/**
+	 * 重複するようなレコードがあるか
+	 *
+	 * @param unknown $data
+	 * @return true(重複あり)/false(重複無し)
+	 */
+	public function hasDuplicateReserved($data) {
+		$conditions = array (
+				'conditions' => array (
+						'Reserve.user_id' => $data ["user_id"],
+						'Reserve.room_id' => $data ["room_id"],
+						'Reserve.start_reserve_date <' => $data ["end_reserve_time"],
+						'Reserve.end_reserve_date >' => $data ["start_reserve_time"]
+				)
+		);
+		return $this->find ( 'count', $conditions ) > 0;
 	}
 
 	/**
@@ -102,5 +163,25 @@ class Reserve extends AppModel {
 			$masterTimelineArr [$i] = $startTime . "-" . $endTime;
 		}
 		return $masterTimelineArr;
+	}
+
+	/**
+	 * 予約
+	 *
+	 * @param unknown $data
+	 */
+	public function reserveRoom($data){
+
+		$startTime= $data["User"]["start_date_pull_down_id"]." ".$data["User"]["start_hour_pull_down_id"];
+		$endTime=$data["User"]["end_date_pull_down_id"]." ".$data["User"]["end_hour_pull_down_id"];
+
+		$resistData = array(
+				'user_id'=>$data['User']['user_id'],
+				'room_id'=>$data['User']['room_id'],
+				'start_reserve_date'=>$startTime,
+				'end_reserve_date'=>$endTime
+		);
+
+		$this->save($resistData);
 	}
 }

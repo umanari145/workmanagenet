@@ -1,46 +1,38 @@
-<?php echo $this->Form->create('User',array('id'=>'room_change_form')); ?>
+<?php echo $this->Form->create('User',array('id'=>'roomChange')); ?>
 
 <?php
-echo $this->Form->input ( 'room_id', array (
+echo $this->Form->input ( 'room_id',array (
 		'label' => "部屋",
 		'options' => $roomList,
 		'value' => $roomId
 ) );
 ?>
+<?php echo $this->Form->input('registMood' ,array('type' => 'hidden','id'=>'regist_mood_id'));?>
+<?php echo $this->Form->button('部屋を予約する', array('type' => 'button','id'=>'reserve_dialog_button'));?>
 <?php echo $this->Form->end(); ?>
 
-<input type="hidden" id="user_id" value="<?php echo $userInfo["id"];?>" />
-
 <div id="time_question">
-<?php echo $this->Form->create('User',array('id'=>'room_reserve_form'));?>
-	<input type="hidden" name="form_mode" value="room_reserve" />
-	<input type="hidden" id="regist_room_id" name="regist_room_id" value="" />
+<?php echo $this->Form->create('User',array('id'=>'roomReserve')); ?>
+<?php echo $this->Form->input('user_id' ,array('type' => 'hidden','value'=>$userInfo['id']));?>
+<?php echo $this->Form->input('room_id' ,array('type' => 'hidden','value'=>$roomId));?>
+<p>
+<?php echo $this->Form->input( 'start_date_pull_down_id', array ('label' => "開始日時",	'div' => false) );	?>
+<?php echo $this->Form->input( 'start_hour_pull_down_id', array ('label' => "開始時刻",	'div' => false) );	?>
+</p>
+<p>
+<?php echo $this->Form->input ('end_date_pull_down_id', array ('label' => "終了日時",'div' => false) );?>
+<?php echo $this->Form->input ('end_hour_pull_down_id', array ('label' => "終了時刻",'div' => false) );?>
+</p>
 
-	<p id="regist_date_disp_id">
-
-	</p>
-
-	<p id="start_time_label_id">
-		<label >開始時刻</label>
-		<p id="start_time_disp_id"></p>
-		<input type="hidden" name="start_time" id="start_time_hidden_id">
-	</p>
-
-	<p id="end_time_label_id">
-		<label >終了時刻</label>
-		<select id="end_time_pull_down_id" name="end_time">
-		</select>
-	</p>
-
+<p id="reserveRoomErrorMessage" style="color:#ff0000;"></p>
 <?php echo $this->Form->end(); ?>
 </div>
 
-<table >
+
+<table>
 
 	<tr>
-		<th width="120px;">
-			時間
-		</th>
+		<th width="120px;">時間</th>
 		<?php foreach ($weekArr as $day):?>
 		<th>
 			<?php
@@ -48,10 +40,16 @@ echo $this->Form->input ( 'room_id', array (
 			?>
 		</th>
 		<?php endforeach; ?>
+
+
+
 	<tr>
 
 
 	<?php foreach ($masterTimelineArr as $timelinId => $timelabel):?>
+
+
+
 	<tr>
 		<th>
 			<?php echo $timelabel;?>
@@ -59,9 +57,9 @@ echo $this->Form->input ( 'room_id', array (
 		<?php  foreach ( $roomScheduleeArr["timeline"] as $dateLabel =>$timelineIdArr ):?>
 		<td>
 		<?php if($timelineIdArr[$timelinId] === true ): ?>
-				予約済
+				×
 		<?php else:?>
-				<input type="button" id="timeline_<?php echo $dateLabel . "_". $timelabel; ?>" class="dialog" value="空き">
+				〇
 		<?php endif;?>
 		</td>
 		<?php endforeach; ?>
@@ -69,4 +67,5 @@ echo $this->Form->input ( 'room_id', array (
 	<?php endforeach; ?>
 
 </table>
+
 

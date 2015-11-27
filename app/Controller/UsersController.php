@@ -58,7 +58,6 @@ class UsersController extends AppController {
 	 * 部屋の予約を行う
 	 */
 	public function reserveroom() {
-
 		$userId = $this->Auth->user ( 'id' );
 
 		$user = $this->Auth->user ();
@@ -66,21 +65,26 @@ class UsersController extends AppController {
 			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
 		}
 
-		$roomIdArr = $this->Room->getRoomList ();
-		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr );
-
-
 
 		if ($this->request->is ( 'post' )) {
-			if( !empty($this->request->data ["User"])){
-				$roomId = $this->request->data ["User"] ["room_id"];
-			}else{
-				$roomId = $this->request->data["regist_room_id"];
-				var_dump($this->request->data);
+			if (! empty ( $this->request->data ['User'] ['start_date_pull_down_id'] )) {
+				$this->request->data ['User'] ['user_id'] = $userId;
+				$this->Reserve->reserveRoom ( $this->request->data );
+				$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
 			}
+			$roomId = $this->request->data ['User'] ['room_id'];
+
 		} else {
-			$roomId = 1;
+			$resData = $this->Room->find ( 'first', array (
+					'conditions' => array (
+							'Room.is_delete' => 0
+					)
+			) );
+
+			$roomId = $resData ['Room'] ['id'];
 		}
+		$roomIdArr = $this->Room->getRoomList ();
+		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr );
 
 		$this->set ( "roomList", $this->Room->getRoomList () );
 		$this->set ( "roomId", $roomId );
@@ -88,6 +92,17 @@ class UsersController extends AppController {
 		$this->set ( "masterTimelineArr", $this->Reserve->getTimeline () );
 		$this->set ( "roomScheduleeArr", $roomScheduleeArr [$roomId] );
 		$this->set ( "userInfo", $this->Auth->user () );
+	}
+
+	public function canReserveDate(){
+		$this->autoRender = FALSE;
+		if ($this->request->is ( 'ajax' )) {
+			if($this->Reserve->hasDuplicateReserved($this->request->data)){
+				echo "fail";
+			}else{
+				echo "success";
+			}
+		}
 	}
 
 	/**
