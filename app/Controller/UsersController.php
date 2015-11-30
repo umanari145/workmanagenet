@@ -109,6 +109,31 @@ class UsersController extends AppController {
 	}
 
 	/**
+	 * ユーザーごとに予約しているリストをみる
+	 */
+	public function viewreservelist( $reserveId = null){
+
+//		if ($this->request->is('get')) {
+//			throw new NotFoundException ( __ ( '不正な処理です。' ) );
+//		}
+
+		$userId = $this->Auth->user ( 'id' );
+
+		$user = $this->Auth->user ();
+		if (empty ( $user )) {
+			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+		}
+
+		if(!empty($reserveId) ){
+			$this->Reserve->delete($reserveId);
+			$this->Session->setFlash ( __ ( '予約データを削除しました。' ) );
+		}
+
+		$this->set('reserveList', $this->Reserve->getReserveListByUser($userId));
+
+	}
+
+	/**
 	 * ユーザーの時間の記録
 	 *
 	 * @throws NotFoundException

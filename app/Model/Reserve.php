@@ -3,6 +3,11 @@ App::uses ( 'AppModel', 'Model' );
 
 class Reserve extends AppModel {
 
+	public $belongsTo = array (
+			'User',
+			'Room'
+	);
+
 	/**
 	 * 予約済のスケジュールの作成
 	 *
@@ -166,7 +171,7 @@ class Reserve extends AppModel {
 	}
 
 	/**
-	 * 予約
+	 * 予約を実行する
 	 *
 	 * @param unknown $data
 	 */
@@ -183,5 +188,31 @@ class Reserve extends AppModel {
 		);
 
 		$this->save($resistData);
+	}
+
+	/**
+	 * ユーザーごとに部屋の履歴を出す
+	 *
+	 * @param unknown $userId ユーザーID
+	 */
+	public function getReserveListByUser($userId){
+
+		$reservedList =array();
+		if(!empty($userId)){
+			$conditions = array (
+					'fields' => array (
+							"Reserve.id",
+							"Room.room_name",
+							"Reserve.start_reserve_date",
+							"Reserve.end_reserve_date"
+					),
+					'conditions' => array (
+							'Reserve.user_id' => $userId,
+							'Reserve.end_reserve_date >=' => date ( "Y/m/d" )
+					)
+			);
+			$reservedList = $this->find('all',$conditions);
+		}
+		return $reservedList;
 	}
 }

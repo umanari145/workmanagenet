@@ -237,6 +237,7 @@ class AdminController extends AppController {
 		}
 	}
 	public function beforeFilter() {
+
 		$this->Auth->allow ( 'login', 'logout' );
 	}
 
@@ -340,8 +341,7 @@ class AdminController extends AppController {
 		}
 
 		if ($this->request->is ( 'post' )) {
-			if ($this->Auth->login ()) {
-
+			if ($this->Auth->login () ) {
 				$this->redirect ( $this->Auth->redirect () );
 			} else {
 				$this->Session->setFlash ( '管理画面ログインに失敗しました。正しいユーザー名とパスワードを入力してください。', 'default', array (), 'auth' );
