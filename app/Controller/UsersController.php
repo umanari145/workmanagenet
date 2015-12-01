@@ -34,6 +34,7 @@ class UsersController extends AppController {
 	);
 
 	public function beforeFilter() {
+		AuthComponent::$sessionKey = 'Auth.users';
 		$this->Auth->allow ( 'login', 'logout' );
 	}
 

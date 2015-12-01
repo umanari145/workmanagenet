@@ -237,7 +237,7 @@ class AdminController extends AppController {
 		}
 	}
 	public function beforeFilter() {
-
+		AuthComponent::$sessionKey = 'Auth.admins';
 		$this->Auth->allow ( 'login', 'logout' );
 	}
 
