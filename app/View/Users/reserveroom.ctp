@@ -1,4 +1,34 @@
 <?php echo $this->Form->create('User',array('id'=>'roomChange')); ?>
+	<p><?php echo $userInfo["japanese_name"]; ?></p>
+
+	<p>
+	<?php
+
+		echo $this->Html->link ( __ ( 'ログアウトする' ), array (
+			'controller' => 'users',
+			'action' => 'logout'),
+    		array('data-role' => 'button', 'role' => 'button')
+			 );
+	?></p>
+
+	<p><?php
+			echo $this->Html->link ( __ ( '自分が予約している部屋を見る' ), array (
+			'controller' => 'users',
+			'action' => 'viewreservelist'),
+    		array('data-role' => 'button', 'role' => 'button')
+			 );
+
+	?></p>
+
+	<p>
+	<?php
+
+		echo $this->Html->link ( __ ( '作業を開始する' ), array (
+			'controller' => 'users',
+			'action' => 'regist'),
+    		array('data-role' => 'button', 'role' => 'button')
+			 );
+	?></p>
 
 <?php
 echo $this->Form->input ( 'room_id',array (

@@ -2,6 +2,14 @@ $(function() {
 
 	var entryUrl = $("#entry_url").val();
 
+	//対象月の変更
+	$("#UserTargetMonthPulldownId").change(function(){
+		$("#UserRegistForm").submit();
+	});
+
+
+
+
 	$("#UserRoomId").change(function(){
 		$("#roomChange").submit();
 	});
@@ -46,7 +54,6 @@ $(function() {
 		    	 if( errorMessage !== ""){
 		    		 $("#reserveRoomErrorMessage").html(errorMessage);
 		    	 }else{
-		    		 alert("success");
 		    		 $("#roomReserve").submit();
 		    	 }
 		    }

@@ -1,3 +1,34 @@
+
+<p><?php echo $userInfo["japanese_name"]; ?></p>
+
+	<p>
+	<?php
+
+		echo $this->Html->link ( __ ( 'ログアウトする' ), array (
+			'controller' => 'users',
+			'action' => 'logout'),
+    		array('data-role' => 'button', 'role' => 'button')
+			 );
+	?></p>
+
+	<p><?php
+			echo $this->Html->link ( __ ( 'チャットルームの予約をする' ), array (
+			'controller' => 'users',
+			'action' => 'reserveroom'),
+    		array('data-role' => 'button', 'role' => 'button')
+			 );
+	?></p>
+
+	<p>
+	<?php
+
+		echo $this->Html->link ( __ ( '作業を開始する' ), array (
+			'controller' => 'users',
+			'action' => 'regist'),
+    		array('data-role' => 'button', 'role' => 'button')
+			 );
+	?></p>
+
 <table>
 
 	<div>

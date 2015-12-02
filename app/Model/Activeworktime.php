@@ -88,9 +88,11 @@ class Activeworktime extends AppModel {
 	 * @param unknown $userId
 	 * @return Ambigous <multitype:, NULL>
 	 */
-	public function getMonthlyReward($userId) {
-		$startTime = date ( "Y-m-d 00:00:00", strtotime ( date ( "Y-m-01" ) ) );
-		$endTime = date ( "Y-m-d H:i:s" );
+	public function getMonthlyReward($userId, $targetMonthVal) {
+		$targetMonthVal2=$targetMonthVal."/01";
+
+		$startTime = date ( "Y-m-01 00:00:00", strtotime ( $targetMonthVal2 ) );
+		$endTime = date ( "Y-m-t 23:59:59", strtotime ( $targetMonthVal2 ) );
 
 		$params = array (
 				'fields' => array (
@@ -108,8 +110,7 @@ class Activeworktime extends AppModel {
 						'Activeworktime.begin >= ' => $startTime,
 						'Activeworktime.end <= ' => $endTime
 				)
-		)
-		;
+		);
 
 		$activeWorktimeRecord = $this->find ( 'all', $params );
 		return $activeWorktimeRecord;
@@ -200,4 +201,22 @@ class Activeworktime extends AppModel {
 		return $fileName;
 	}
 
+	/**
+	 * 対象月の配列の作成
+	 *
+	 * @return multitype:string
+	 */
+	public function makeTargetRewardArray() {
+		$nowDateVal = date ( "Y/m" );
+		$nowDateLabel = date ( "Y年m月" );
+		$targetDateArr=[];
+		$targetDateArr[$nowDateVal]=$nowDateLabel;
+
+		for($i = 1; $i < 12; $i ++) {
+			$dateVal = date ( "Y/m", strtotime ( "-" . $i . "month" ) );
+			$dateLabel = date ( "Y年m月", strtotime ( "-" . $i . "month" ) );
+			$targetDateArr [$dateVal]=$dateLabel;
+		}
+		return $targetDateArr;
+	}
 }

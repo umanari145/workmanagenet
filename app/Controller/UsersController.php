@@ -63,7 +63,7 @@ class UsersController extends AppController {
 
 		$user = $this->Auth->user ();
 		if (empty ( $user )) {
-			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+			$this->Session->setFlash (__ ( 'データが存在しません。' ) );
 		}
 
 
@@ -112,26 +112,31 @@ class UsersController extends AppController {
 	/**
 	 * ユーザーごとに予約しているリストをみる
 	 */
-	public function viewreservelist( $reserveId = null){
-
-//		if ($this->request->is('get')) {
-//			throw new NotFoundException ( __ ( '不正な処理です。' ) );
-//		}
-
+	public function viewreservelist($reserveId = null) {
 		$userId = $this->Auth->user ( 'id' );
 
 		$user = $this->Auth->user ();
 		if (empty ( $user )) {
-			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+			$this->Session->setFlash ( __ ( 'データが存在しません。' ) );
 		}
 
-		if(!empty($reserveId) ){
-			$this->Reserve->delete($reserveId);
-			$this->Session->setFlash ( __ ( '予約データを削除しました。' ) );
+
+		if (! empty ( $reserveId )) {
+			$reserveData = $this->Reserve->find ( 'first', array (
+					"conditions" => array (
+							"Reserve.id" => $reserveId
+					)
+			) );
+
+			if ($userId !== $reserveData ["User"] ["id"]) {
+				$this->Session->setFlash ( __ ( '不正なアクセスです' ) );
+			} else {
+				$this->Reserve->delete ( $reserveId );
+				$this->Session->setFlash ( __ ( '予約データを削除しました。' ) );
+			}
 		}
-
-		$this->set('reserveList', $this->Reserve->getReserveListByUser($userId));
-
+		$this->set ( "userInfo", $this->Auth->user () );
+		$this->set ( 'reserveList', $this->Reserve->getReserveListByUser ( $userId ) );
 	}
 
 	/**
@@ -144,10 +149,18 @@ class UsersController extends AppController {
 
 		$user = $this->Auth->user ();
 		if (empty ( $user )) {
-			throw new NotFoundException ( __ ( 'データが存在しません。' ) );
+			$this->Session->setFlash ( __ ( 'データが存在しません。' ) );
 		}
 
+		$targetMonthVal = date ( "Y/m" );
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
+
+			// 対象月変更
+			if (isset ( $this->request->data ["User"] ["target_month_pulldown_id"] )) {
+				$targetMonthVal = $this->request->data ["User"] ["target_month_pulldown_id"];
+			}
+
+			// 稼働開始スタート
 			if ($this->Worktime->save ( $this->request->data )) {
 
 				$worktimeId = $this->Worktime->getLastInsertID ();
@@ -171,11 +184,15 @@ class UsersController extends AppController {
 			}
 		}
 
-		$this->set ( "montlyReward", $this->Activeworktime->getMonthlyReward ( $userId ) );
+		$this->set ( "targetMonthVal", $targetMonthVal );
+		$this->set ( "rewardMonthList", $this->Activeworktime->makeTargetRewardArray () );
+		$this->set ( "montlyReward", $this->Activeworktime->getMonthlyReward ( $userId, $targetMonthVal ) );
 		$this->set ( "roomList", $this->Room->getRoomList () );
 		$this->set ( "userInfo", $this->Auth->user () );
 		$this->render ( 'regist' );
 	}
+
+
 
 
 	/**
