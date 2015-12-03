@@ -99,16 +99,12 @@ class UsersController extends AppController {
 	/**
 	 * ある特定の時間帯が予約可能か
 	 */
-	public function canReserveDate(){
+	public function canReserveDate() {
 		$this->autoRender = FALSE;
-		if ($this->request->is ( 'ajax' )) {
-			if($this->Reserve->hasDuplicateReserved($this->request->data)){
-				echo "fail";
-			}else{
-				echo "success";
-			}
-		}else{
+		if ($this->Reserve->hasDuplicateReserved ( $this->request->data )) {
 			echo "fail";
+		} else {
+			echo "success";
 		}
 	}
 
