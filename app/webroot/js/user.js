@@ -7,41 +7,6 @@ $(function() {
 		$("#UserRegistForm").submit();
 	});
 
-	var testUrl ="http://fm-liveworks.herokuapp.com/users/sayRes";
-	var postData={"hoge":"hogehoge"}
-	$.ajax({
-		type : "POST",
-		async:true,
-		data : postData,
-		url : testUrl,
-		success : function(res) {
-			console.log(res);
-		},
-		 error: function(XMLHttpRequest, textStatus, errorThrown) {
-	            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-	            console.log("textStatus : " + textStatus);
-	            console.log("errorThrown : " + errorThrown.message);
-		 }
-	});
-
-	var testUrl2 ="http://fm-liveworks.herokuapp.com/users/sayRes";
-	var postData2={"hoge":"hogehoge2"}
-	$.ajax({
-		type : "POST",
-		async:true,
-		data : postData2,
-		url : testUrl2,
-		success : function(res) {
-			console.log(res);
-		},
-		 error: function(XMLHttpRequest, textStatus, errorThrown) {
-	            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-	            console.log("textStatus : " + textStatus);
-	            console.log("errorThrown : " + errorThrown.message);
-		 }
-	});
-
-
 	$("#UserRoomId").change(function(){
 		$("#roomChange").submit();
 	});

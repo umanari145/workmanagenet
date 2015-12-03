@@ -4,7 +4,7 @@ Environment::configure('heroku', true, [
     // Heroku 用設定
 	    App::uses('CakeLog', 'Log');
 
-    define("ENTRY_URL","https://fm-liveworks.herokuapp.com/");
+    define("ENTRY_URL","http://fm-liveworks.herokuapp.com/");
 
     CakeLog::config('debug', array(
         'engine' => 'File',
