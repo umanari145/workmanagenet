@@ -96,6 +96,11 @@ class UsersController extends AppController {
 		$this->set ( "userInfo", $this->Auth->user () );
 	}
 
+	public function sayRes(){
+		$this->autoRender = FALSE;
+		echo $this->request->data["hoge"];
+	}
+
 	/**
 	 * ある特定の時間帯が予約可能か
 	 */

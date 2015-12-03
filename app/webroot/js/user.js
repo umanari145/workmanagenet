@@ -7,8 +7,22 @@ $(function() {
 		$("#UserRegistForm").submit();
 	});
 
-
-
+	var testUrl = entryUrl + "users/sayRes";
+	var postData={"hoge":"hogehoge"}
+	$.ajax({
+		type : "POST",
+		async:false,
+		data : postData,
+		url : testUrl,
+		success : function(res) {
+			console.log(res);
+		},
+		 error: function(XMLHttpRequest, textStatus, errorThrown) {
+	            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+	            console.log("textStatus : " + textStatus);
+	            console.log("errorThrown : " + errorThrown.message);
+		 }
+	});
 
 	$("#UserRoomId").change(function(){
 		$("#roomChange").submit();
