@@ -11,7 +11,7 @@ $(function() {
 	var postData={"hoge":"hogehoge"}
 	$.ajax({
 		type : "POST",
-		async:false,
+		async:true,
 		data : postData,
 		url : testUrl,
 		success : function(res) {
