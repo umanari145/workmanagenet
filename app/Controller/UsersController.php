@@ -107,6 +107,8 @@ class UsersController extends AppController {
 			}else{
 				echo "success";
 			}
+		}else{
+			"fail";
 		}
 	}
 
