@@ -16,7 +16,7 @@
 	?></p>
 
 	<p><?php
-			echo $this->Html->link ( __ ( 'チャットルームの予約をする' ), array (
+			echo $this->Html->link ( __ ( '出勤の予約をする' ), array (
 			'controller' => 'users',
 			'action' => 'reserveroom'),
     		array('data-role' => 'button', 'role' => 'button')

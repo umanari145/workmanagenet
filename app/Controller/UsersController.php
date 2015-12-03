@@ -78,7 +78,8 @@ class UsersController extends AppController {
 		} else {
 			$resData = $this->Room->find ( 'first', array (
 					'conditions' => array (
-							'Room.is_delete' => 0
+							'Room.is_delete' => 0,
+							'Room.room_name <>'=> '在宅'
 					)
 			) );
 
@@ -87,7 +88,7 @@ class UsersController extends AppController {
 		$roomIdArr = $this->Room->getRoomList ();
 		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr );
 
-		$this->set ( "roomList", $this->Room->getRoomList () );
+		$this->set ( "roomList", $this->Room->getRoomList (true) );
 		$this->set ( "roomId", $roomId );
 		$this->set ( "weekArr", $this->Reserve->makeWeekArr () );
 		$this->set ( "masterTimelineArr", $this->Reserve->getTimeline () );

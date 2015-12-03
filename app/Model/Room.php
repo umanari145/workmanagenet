@@ -10,9 +10,10 @@ class Room extends AppModel {
 	/**
 	 * 部屋番号=>部屋名のリストの取得
 	 *
+	 * @param $notIncludeHome 在宅を含めない
 	 * @return 部屋番号=>部屋名のリスト
 	 */
-	public function getRoomList(){
+	public function getRoomList($notIncludeHome = false ){
 		$conditions = array(
 				'fields' => array(
 						'id',
@@ -22,6 +23,11 @@ class Room extends AppModel {
 						'Room.is_delete' => 0
 				)
 		);
+
+		if($notIncludeHome){
+			$conditions['conditions']['Room.room_name <> '] ='在宅';
+		}
+
 		return $this->find('list',$conditions);
 	}
 
