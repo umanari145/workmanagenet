@@ -34,7 +34,12 @@ $(function() {
 							data : postObj,
 							success : function(res) {
 								window.location.reload();
-							}
+							},
+							 error: function(XMLHttpRequest, textStatus, errorThrown) {
+						            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+						            console.log("textStatus : " + textStatus);
+						            console.log("errorThrown : " + errorThrown.message);
+							 }
 						});
 
 

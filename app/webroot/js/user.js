@@ -143,7 +143,12 @@ $(function() {
 				} else {
 					canReserve = true;
 				}
-			}
+			},
+			 error: function(XMLHttpRequest, textStatus, errorThrown) {
+		            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+		            console.log("textStatus : " + textStatus);
+		            console.log("errorThrown : " + errorThrown.message);
+			 }
 		});
 		return canReserve;
 	}
