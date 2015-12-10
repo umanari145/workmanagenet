@@ -9,8 +9,7 @@ class UsersController extends AppController {
 			'Worktime',
 			'Room',
 			'Activeworktime',
-			'Reserve',
-			'Timeline'
+			'Reserve'
 	);
 
 	public $layout    = 'user';
@@ -65,7 +64,6 @@ class UsersController extends AppController {
 		if (empty ( $user )) {
 			$this->Session->setFlash (__ ( 'データが存在しません。' ) );
 		}
-
 
 		if ($this->request->is ( 'post' )) {
 			if (! empty ( $this->request->data ['User'] ['start_date_pull_down_id'] )) {

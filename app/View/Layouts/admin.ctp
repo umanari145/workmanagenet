@@ -31,8 +31,12 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<?php
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('admin');
+		echo $this->Html->css('jquery-ui.min');
 		echo $this->Html->script('jquery-1.10.2.min');
+		echo $this->Html->script('sugar.min');
 		echo $this->Html->script('custom');
+		echo $this->Html->script('user');
+		echo $this->Html->script('jquery-ui.min');
 		echo $this->Html->script('sortable');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');

@@ -12,7 +12,8 @@ class AdminController extends AppController {
 			'User',
 			'Worktime',
 			'Activeworktime',
-			'Room'
+			'Room',
+			'Reserve'
 	);
 	public $layout = "admin";
 	public $components = array (
@@ -153,6 +154,8 @@ class AdminController extends AppController {
 		$this->Worktime->calcWorkTimeFromStartToEnd ( $workDetailData );
 		$this->set ( "workdetail", $workDetailData );
 	}
+
+
 
 	/**
 	 * 稼働履歴CSVアップロード
@@ -331,6 +334,39 @@ class AdminController extends AppController {
 		}
 		$this->render ( 'roomindex' );
 	}
+
+	/**
+	 * 部屋の予約を行う
+	 */
+	public function reserveroom() {
+
+		if ($this->request->is ( 'post' )) {
+			if (! empty ( $this->request->data ['User'] ['start_date_pull_down_id'] )) {
+				$this->Reserve->reserveRoom ( $this->request->data );
+				$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
+			}
+			$roomId = $this->request->data ['User'] ['room_id'];
+
+		} else {
+			$resData = $this->Room->find ( 'first', array (
+					'conditions' => array (
+							'Room.is_delete' => 0,
+							'Room.room_name <>'=> '在宅'
+					)
+			) );
+
+			$roomId = $resData ['Room'] ['id'];
+		}
+		$roomIdArr = $this->Room->getRoomList ();
+		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr ,true );
+
+		$this->set ( "roomList", $this->Room->getRoomList (true) );
+		$this->set ( "roomId", $roomId );
+		$this->set ( "weekArr", $this->Reserve->makeWeekArr () );
+		$this->set ( "masterTimelineArr", $this->Reserve->getTimeline () );
+		$this->set ( "roomScheduleeArr", $roomScheduleeArr [$roomId] );
+	}
+
 
 	/**
 	 * ログインメソッド

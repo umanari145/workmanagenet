@@ -11,6 +11,7 @@
         <p><?php echo $this->Html->link(__('スタッフ稼働履歴一覧'), array('controller'=>'admin','action' => 'useractiveworkdata')); ?></p>
         <p><?php echo $this->Html->link(__('部屋一覧'), array('controller'=>'admin','action' => 'roomindex')); ?></p>
         <p><?php echo $this->Html->link(__('部屋登録'), array('controller'=>'admin','action' => 'roomadd')); ?></p>
+        <p><?php echo $this->Html->link(__('部屋予約一覧'), array('controller'=>'admin','action' => 'reserveroom')); ?></p>
         <p><?php echo $this->Html->link(__('ログアウトする'), array('controller'=>'admin','action' => 'logout')); ?></p>
     </div>
     <!--item_regist end -->

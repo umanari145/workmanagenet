@@ -12,9 +12,11 @@ class Reserve extends AppModel {
 	 * 予約済のスケジュールの作成
 	 *
 	 * @param unknown $roomIdArr
+	 * @param $isAdmin 管理者か否か
 	 * @return multitype:multitype:予約済みを含んだ一週間分のタイムスケジュール
 	 */
-	public function createAvailabelTime($roomIdArr) {
+	public function createAvailabelTime($roomIdArr,$isAdmin = false) {
+
 		$roomScheduleeArr = array ();
 		foreach ( $roomIdArr as $roomId => $roomName ) {
 
@@ -23,9 +25,14 @@ class Reserve extends AppModel {
 					"timeline" => $this->makeRegularTimeLine ($roomId)
 			];
 		}
-		$reservedTimeline = $this->getReserveTimeline ();
-		$reservedTimeline2 = $this->convertReserveTime($reservedTimeline);
-		$this->checkIsReservedTimeline ( $roomScheduleeArr, $reservedTimeline2 );
+		$reservedTimeline = $this->getReserveTimeline ($isAdmin);
+		$reservedTimeline2 = $this->convertReserveTime($reservedTimeline, $isAdmin);
+		if( $isAdmin === true ){
+			$this->checkIsReservedTimelineByAdmin ( $roomScheduleeArr, $reservedTimeline2 );
+		}else{
+			$this->checkIsReservedTimeline ( $roomScheduleeArr, $reservedTimeline2 );
+		}
+
 		return $roomScheduleeArr;
 	}
 
@@ -60,9 +67,11 @@ class Reserve extends AppModel {
 
 	/**
 	 * すでに予約済みのレコードを取得
+	 * @param $isAdmin 管理者か否か
 	 * @return 予約済の部屋データの取得
+	 *
 	 */
-	private function getReserveTimeline() {
+	private function getReserveTimeline($isAdmin = false) {
 		$conditions = array (
 				'fields' => array (
 						"room_id",
@@ -74,6 +83,11 @@ class Reserve extends AppModel {
 						'Reserve.end_reserve_date >=' => date ( "Y/m/d" )
 				)
 		);
+
+		if( $isAdmin === true){
+			$conditions['fields'][] ="User.japanese_name";
+		}
+
 		return $this->find ( 'all', $conditions );
 	}
 
@@ -97,12 +111,33 @@ class Reserve extends AppModel {
 	}
 
 	/**
+	 * 予約済の時間帯にユーザー情報を入れる(管理画面用)
+	 *
+	 * @param unknown $roomScheduleeArr 一週間分の部屋のスケジュール
+	 * @param unknown $reservedTimeline 予約データ
+	 */
+	private function checkIsReservedTimelineByAdmin(&$roomScheduleeArr, $reservedTimeline) {
+		if (! empty ( $reservedTimeline )) {
+
+			foreach ( $reservedTimeline as $timeline ) {
+				$room_id = $timeline  ["room_id"];
+				$timeline_id = $timeline  ["timeline_id"];
+				$reservedData = $timeline  ["reserve_date"];
+				$roomScheduleeArr [$room_id] ["timeline"] [$reservedData] [$timeline_id] = $timeline["japanese_name"];
+			}
+		}
+
+	}
+
+
+	/**
 	 * データベースのレコードを1時間単位の配列に区切り、処理しやすくする
 	 *
 	 * @param unknown $reservedTimeline 予約済みの時間軸
+	 * @param $isAdmin 管理者か否か
 	 * @return 変換後の予約済み配列
 	 */
-	private function convertReserveTime($reservedTimeline) {
+	private function convertReserveTime($reservedTimeline,$isAdmin = false) {
 		$reservedTimeline2 = [ ];
 		foreach ( $reservedTimeline as $timeline ) {
 			$startDate = $timeline ["Reserve"] ["start_reserve_date"];
@@ -127,6 +162,10 @@ class Reserve extends AppModel {
 						'reserve_date' => $reserveDate,
 						'timeline_id' => $timelineId
 				];
+
+				if( $isAdmin === true){
+					$reservedTimelineChildren["japanese_name"] = $timeline ["User"] ["japanese_name"];
+				}
 
 				$reservedTimeline2 [] = $reservedTimelineChildren;
 				if ($addTime === $endDate) {
