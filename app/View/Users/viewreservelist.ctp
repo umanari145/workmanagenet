@@ -29,16 +29,15 @@
 			 );
 	?></p>
 
-<table>
-
+<table class="my_reserve_time">
 	<div>
 		<p>予約している部屋一覧</p>
 	</div>
 	<tr>
-		<th>部屋</th>
-		<th>開始日時</th>
-		<th>終了日時</th>
-		<th>削除</th>
+		<th width="100">部屋</th>
+		<th width="200">開始日時</th>
+		<th width="200">終了日時</th>
+		<th width="100">削除</th>
 	<tr>
 
 	<?php foreach ($reserveList as $reserve):?>
@@ -47,10 +46,10 @@
 			<?php echo $reserve['Room']['room_name']; ?>
 		</td>
 		<td>
-			<?php echo $reserve['Reserve']['start_reserve_date']; ?>
+			<?php echo date('Y年m月d日 G:i',strtotime($reserve['Reserve']['start_reserve_date'])); ?>
 		</td>
 		<td>
-			<?php echo $reserve['Reserve']['end_reserve_date']; ?>
+			<?php echo date('Y年m月d日 G:i',strtotime($reserve['Reserve']['end_reserve_date'])); ?>
 		</td>
 		<td>
 			<?php echo $this->form->postLink('削除', array('action'=>'viewreservelist', $reserve['Reserve']['id']),

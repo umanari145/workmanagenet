@@ -2,12 +2,13 @@ $(function() {
 
 	var entryUrl = $("#entry_url").val();
 
-	//対象月の変更
+	//報酬額:対象月の変更
 	$("#UserTargetMonthPulldownId").change(function(){
 		$("#UserRegistForm").submit();
 	});
 
-	$("#UserRoomId").change(function(){
+	//部屋と対象期間の変更
+	$(".reserve_info_data").change(function(){
 		$("#roomChange").submit();
 	});
 
@@ -16,7 +17,8 @@ $(function() {
 		//開始時刻
 		$("#UserStartDatePullDownId option").remove();
 		var startDateEle =  $("#UserStartDatePullDownId");
-		var startDate = Date.create().format('{yyyy}-{MM}-{dd}');
+		var startPeriod = $("#UserReservePeriod").val();
+		var startDate = Date.create(startPeriod).format('{yyyy}-{MM}-{dd}');
 		var startDateEle = makeDateOption(startDateEle, startDate)
 
 		$("#UserStartHourPullDownId option").remove();
@@ -27,8 +29,9 @@ $(function() {
 		//終了時間
 		$("#UserEndDatePullDownId option").remove();
 		var EndDateEle =  $("#UserEndDatePullDownId");
-		var EndDate = Date.create().format('{yyyy}-{MM}-{dd}');
-		var EndtDateEle = makeDateOption(EndDateEle, EndDate)
+		var EndPeriod = $("#UserReservePeriod").val();
+		var EndDate = Date.create(EndPeriod).format('{yyyy}-{MM}-{dd}');
+		var EndtDateEle = makeDateOption(EndDateEle, EndDate,true)
 
 		$("#UserEndHourPullDownId option").remove();
 		var EndHourEle =  $("#UserEndHourPullDownId");
@@ -55,6 +58,12 @@ $(function() {
 		    	 }
 		    }
 		  }
+	});
+
+	//開始日付を変えた瞬間に終了日時をセット
+	$("#UserStartDatePullDownId").change(function(){
+		var startDate = $("#UserStartDatePullDownId").val();
+		$("#UserEndDatePullDownId").val(startDate);
 	});
 
 	function checkReserve() {
@@ -175,8 +184,17 @@ $(function() {
 		return parentEle;
 	}
 
-	function makeDateOption(parentEle,startTime){
-		for (var i = 0; i < 7; i++) {
+	/**
+	 * 日にちのプルダウン
+	 * @param parentEle 日付のプルダウン要素
+	 * @param startTime 開始日時
+	 * @param isEndOption 終了ふらう
+	 */
+	function makeDateOption(parentEle,startTime,isEnd){
+
+		var loopCnt = ( isEnd === true )?8:7;
+
+		for (var i = 0; i < loopCnt; i++) {
 			var optionEle = $("<option>");
 			var timeEle = (i).daysAfter(startTime).format('{yyyy}/{MM}/{dd}');
 			optionEle.val(timeEle).text(timeEle);

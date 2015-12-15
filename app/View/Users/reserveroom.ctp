@@ -32,9 +32,18 @@
 
 <?php
 echo $this->Form->input ( 'room_id',array (
+		'class' =>'reserve_info_data',
 		'label' => "部屋",
 		'options' => $roomList,
 		'value' => $roomId
+) );
+?>
+<?php
+echo $this->Form->input ( 'reserve_period',array (
+		'class' =>'reserve_info_data',
+		'label' => "期間",
+		'options' => $weekPullDownList,
+		'value' => $startPeriod
 ) );
 ?>
 <?php echo $this->Form->input('registMood' ,array('type' => 'hidden','id'=>'regist_mood_id'));?>
@@ -45,6 +54,7 @@ echo $this->Form->input ( 'room_id',array (
 <?php echo $this->Form->create('User',array('id'=>'roomReserve')); ?>
 <?php echo $this->Form->input('user_id' ,array('type' => 'hidden','value'=>$userInfo['id']));?>
 <?php echo $this->Form->input('room_id' ,array('type' => 'hidden','value'=>$roomId));?>
+<?php echo $this->Form->input('reserve_period' ,array('type' => 'hidden','value'=>$startPeriod));?>
 <p>
 <?php echo $this->Form->input( 'start_date_pull_down_id', array ('label' => "開始日時",	'div' => false) );	?>
 <?php echo $this->Form->input( 'start_hour_pull_down_id', array ('label' => "開始時刻",	'div' => false) );	?>
@@ -82,10 +92,12 @@ echo $this->Form->input ( 'room_id',array (
 		</th>
 		<?php  foreach ( $roomScheduleeArr["timeline"] as $dateLabel =>$timelineIdArr ):?>
 		<td>
-		<?php if($timelineIdArr[$timelinId] === true ): ?>
-				×
-		<?php else:?>
+		<?php if( $timelineIdArr[$timelinId] === false ): ?>
 				〇
+		<?php elseif( $timelineIdArr[$timelinId] === $userInfo['id']):?>
+			<?php echo $userInfo['japanese_name']; ?>
+		<?php else:?>
+				×
 		<?php endif;?>
 		</td>
 		<?php endforeach; ?>

@@ -12,55 +12,70 @@ class Reserve extends AppModel {
 	 * 予約済のスケジュールの作成
 	 *
 	 * @param unknown $roomIdArr
+	 * @param $weekPeriod 対象期間
 	 * @param $isAdmin 管理者か否か
+	 * @param $startPeriod 開始日
 	 * @return multitype:multitype:予約済みを含んだ一週間分のタイムスケジュール
 	 */
-	public function createAvailabelTime($roomIdArr,$isAdmin = false) {
+	public function createAvailabelTime($roomIdArr,$startPeriod = "" ,$isAdmin = false) {
 
 		$roomScheduleeArr = array ();
 		foreach ( $roomIdArr as $roomId => $roomName ) {
 
 			$roomScheduleeArr [$roomId] = [
 					"room_name" => $roomName,
-					"timeline" => $this->makeRegularTimeLine ($roomId)
+					"timeline" => $this->makeRegularTimeLine ($startPeriod)
 			];
 		}
-		$reservedTimeline = $this->getReserveTimeline ($isAdmin);
+		$reservedTimeline = $this->getReserveTimeline ($isAdmin,$startPeriod);
+
 		$reservedTimeline2 = $this->convertReserveTime($reservedTimeline, $isAdmin);
 		if( $isAdmin === true ){
 			$this->checkIsReservedTimelineByAdmin ( $roomScheduleeArr, $reservedTimeline2 );
 		}else{
 			$this->checkIsReservedTimeline ( $roomScheduleeArr, $reservedTimeline2 );
 		}
-
 		return $roomScheduleeArr;
 	}
 
 	/**
-	 * 一週間分の日付と時間軸の配列を作成する
-	 * @return 1週間分の日付の配列
+	 * 出勤時メール確認
+	 * @param unknown $requestData リクエストデータ
 	 */
-	private function makeRegularTimeLine(){
+//  	public function sendReserveMail( $reserveRecordId ){
+// 		$this->find('all');
+// 	}
+
+	/**
+	 * 期間ごとのプルダウン作成
+	 *
+	 * @return 週の配列
+	 */
+	public function makeWeekPeriodPullDown(){
 		$weekArr = array ();
-		for($i = 0; $i < 7; $i ++) {
+		for($i = 0; $i < 8; $i ++) {
 			$timelineArr = array ();
-			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "days" ) );
-			$weekArr [$dateVal] = array_fill(1,24, false);
+			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "weeks" ) );
+			$lastDateVal = date("Y/m/d" , strtotime(" +6days", strtotime($dateVal)));
+			$weekArr [$dateVal] = $dateVal . "～" . $lastDateVal;
 		}
 		return $weekArr;
-
 	}
 
 	/**
-	 * 1週間の配列を作成
-	 * @return multitype:
+	 * 一週間分の日付と時間軸の配列を作成する
+	 *
+	 * @param $startPeriod 開始日
+	 * @return 1週間分の日付の配列
 	 */
-	public function makeWeekArr(){
-		$weekArr=array();
+	private function makeRegularTimeLine($startPeriod = "") {
+		$startPeriod = (! empty ( $startPeriod )) ? $startPeriod : date ( "Y/m/d" );
+
+		$weekArr = array ();
 		for($i = 0; $i < 7; $i ++) {
 			$timelineArr = array ();
-			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "days" ) );
-			$weekArr[]=$dateVal;
+			$dateVal = date ( "Y/m/d", strtotime ( "+" . $i . "days", strtotime ( $startPeriod ) ) );
+			$weekArr [$dateVal] = array_fill ( 1, 24, false );
 		}
 		return $weekArr;
 	}
@@ -68,10 +83,16 @@ class Reserve extends AppModel {
 	/**
 	 * すでに予約済みのレコードを取得
 	 * @param $isAdmin 管理者か否か
+	 * @param $startPeriod 開始日
 	 * @return 予約済の部屋データの取得
 	 *
 	 */
-	private function getReserveTimeline($isAdmin = false) {
+	private function getReserveTimeline($isAdmin = false,$startPeriod = "") {
+
+		$startPeriod = (! empty ( $startPeriod )) ? $startPeriod : date ( "Y/m/d" );
+		$lastPeriod =  date("Y/m/d 23:59:59" , strtotime(" +6days", strtotime($startPeriod)));
+
+
 		$conditions = array (
 				'fields' => array (
 						"room_id",
@@ -80,14 +101,14 @@ class Reserve extends AppModel {
 						"end_reserve_date"
 				),
 				'conditions' => array (
-						'Reserve.end_reserve_date >=' => date ( "Y/m/d" )
+						'Reserve.start_reserve_date <' => $lastPeriod,
+						'Reserve.end_reserve_date >' => $startPeriod
 				)
 		);
 
 		if( $isAdmin === true){
 			$conditions['fields'][] ="User.japanese_name";
 		}
-
 		return $this->find ( 'all', $conditions );
 	}
 
@@ -99,12 +120,11 @@ class Reserve extends AppModel {
 	 */
 	private function checkIsReservedTimeline(&$roomScheduleeArr, $reservedTimeline) {
 		if (! empty ( $reservedTimeline )) {
-
 			foreach ( $reservedTimeline as $timeline ) {
 				$room_id = $timeline  ["room_id"];
 				$timeline_id = $timeline  ["timeline_id"];
 				$reservedData = $timeline  ["reserve_date"];
-				$roomScheduleeArr [$room_id] ["timeline"] [$reservedData] [$timeline_id] = true;
+				$roomScheduleeArr [$room_id] ["timeline"] [$reservedData] [$timeline_id] = $timeline['user_id'];
 			}
 		}
 

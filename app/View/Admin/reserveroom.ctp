@@ -3,14 +3,22 @@
 
 <?php
 echo $this->Form->input ( 'room_id',array (
+		'class' =>'reserve_info_data',
 		'label' => "部屋",
 		'options' => $roomList,
 		'value' => $roomId
 ) );
 ?>
 
+<?php
+echo $this->Form->input ( 'reserve_period',array (
+		'class' =>'reserve_info_data',
+		'label' => "期間",
+		'options' => $weekPullDownList,
+		'value' => $startPeriod
+) );
+?>
 <?php echo $this->Form->end(); ?>
-
 <table>
 
 	<tr>
@@ -42,6 +50,7 @@ echo $this->Form->input ( 'room_id',array (
 	<?php endforeach; ?>
 
 </table>
+
 </div>
 <?php echo $this->element('left'); ?>
 

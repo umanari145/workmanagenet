@@ -339,30 +339,31 @@ class AdminController extends AppController {
 	 * 部屋の予約を行う
 	 */
 	public function reserveroom() {
-
 		if ($this->request->is ( 'post' )) {
 			if (! empty ( $this->request->data ['User'] ['start_date_pull_down_id'] )) {
 				$this->Reserve->reserveRoom ( $this->request->data );
 				$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
 			}
 			$roomId = $this->request->data ['User'] ['room_id'];
-
+			$startPeriod = $this->request->data ['User'] ['reserve_period'];
 		} else {
 			$resData = $this->Room->find ( 'first', array (
 					'conditions' => array (
 							'Room.is_delete' => 0,
-							'Room.room_name <>'=> '在宅'
+							'Room.room_name <>' => '在宅'
 					)
 			) );
-
 			$roomId = $resData ['Room'] ['id'];
+			$startPeriod = date('Y/m/d');
 		}
-		$roomIdArr = $this->Room->getRoomList ();
-		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr ,true );
 
-		$this->set ( "roomList", $this->Room->getRoomList (true) );
+		$roomIdArr = $this->Room->getRoomList ();
+		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr, $startPeriod, true );
+		$this->set ( "weekPullDownList", $this->Reserve->makeWeekPeriodPullDown());
+		$this->set ( "roomList", $this->Room->getRoomList ( true ) );
 		$this->set ( "roomId", $roomId );
-		$this->set ( "weekArr", $this->Reserve->makeWeekArr () );
+		$this->set ( "startPeriod", $startPeriod );
+		$this->set ( "weekArr", array_keys($roomScheduleeArr[$roomId]['timeline']));
 		$this->set ( "masterTimelineArr", $this->Reserve->getTimeline () );
 		$this->set ( "roomScheduleeArr", $roomScheduleeArr [$roomId] );
 	}

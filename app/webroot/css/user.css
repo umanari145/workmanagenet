@@ -183,6 +183,11 @@ table .work_time, table .work_time_id,tale input{
 	font-size:7pt;
 }
 
+.my_reserve_time{
+	width:300px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
 
 /* SQL log */
 .cake-sql-log {
