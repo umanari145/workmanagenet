@@ -35,6 +35,9 @@ class Reserve extends AppModel {
 		}else{
 			$this->checkIsReservedTimeline ( $roomScheduleeArr, $reservedTimeline2 );
 		}
+		//対象機関からずれる日程を削除
+		$this->fairByPeriod( $roomScheduleeArr, $startPeriod);
+
 		return $roomScheduleeArr;
 	}
 
@@ -45,6 +48,28 @@ class Reserve extends AppModel {
 //  	public function sendReserveMail( $reserveRecordId ){
 // 		$this->find('all');
 // 	}
+
+	/**
+	 * 対象期間を外れる予約日程を削除する
+	 *
+	 * @param unknown $roomScheduleeArr
+	 * @param string $startPeriod
+	 */
+	private function fairByPeriod( &$roomScheduleeArr, $startPeriod=""){
+
+		$startPeriod = (! empty ( $startPeriod )) ? $startPeriod : date ( "Y/m/d" );
+		$lastPeriod =  date("Y/m/d " , strtotime(" +6days", strtotime($startPeriod)));
+
+		foreach( $roomScheduleeArr as &$schedule){
+			//スケジュール外の日程を削除
+			foreach ( $schedule["timeline"] as $targetPeriod => $data){
+				if( strtotime($targetPeriod) < strtotime( $startPeriod) ||
+					strtotime($lastPeriod) < strtotime($targetPeriod) ){
+					unset( $schedule["timeline"][$targetPeriod]);
+				}
+			}
+		}
+	}
 
 	/**
 	 * 期間ごとのプルダウン作成
