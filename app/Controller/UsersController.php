@@ -70,7 +70,7 @@ class UsersController extends AppController {
 			if (! empty ( $this->request->data ['User'] ['start_date_pull_down_id'] )) {
 				$this->request->data ['User'] ['user_id'] = $userId;
 				$this->Reserve->reserveRoom ( $this->request->data );
-				//$this->Reserve->sendReserveMail( $this->Reserve->getLastInsertID());
+				$this->Reserve->sendReserveMail( $this->Reserve->getLastInsertID());
 				$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
 			}
 			//部屋と予約対象期間の変更

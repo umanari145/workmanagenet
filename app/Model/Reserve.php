@@ -1,5 +1,6 @@
 <?php
 App::uses ( 'AppModel', 'Model' );
+App::import('Vendor', 'util/sendmail');
 
 class Reserve extends AppModel {
 
@@ -43,11 +44,47 @@ class Reserve extends AppModel {
 
 	/**
 	 * 出勤時メール確認
-	 * @param unknown $requestData リクエストデータ
+	 *
+	 * @param unknown $requestData
+	 *        	リクエストデータ
 	 */
-//  	public function sendReserveMail( $reserveRecordId ){
-// 		$this->find('all');
-// 	}
+	public function sendReserveMail($reserveRecordId) {
+		$record = $this->find ( 'first', array (
+				'fields' => array (
+						"Room.room_name",
+						"User.japanese_name",
+						"DATE_FORMAT( Reserve.start_reserve_date , '%Y/%m/%d %H:%i' ) as start_time",
+						"DATE_FORMAT( Reserve.end_reserve_date, '%Y/%m/%d %H:%i' ) as end_time"
+				),
+				'conditions' => array (
+						'Reserve.id' => $reserveRecordId
+				)
+		) );
+
+		$mailMessage = $this->makeReserveMailMessage($record);
+		$sendmail = new Sendmail();
+		$sendmail->sendGridMail("予約連絡メール", $mailMessage );
+	}
+
+	/**
+	 * 部屋予約メールの文面
+	 *
+	 * @param $reserveData 予約レコード
+	 * @return string メールのメッセージ
+	 */
+	private function makeReserveMailMessage($reserveData) {
+
+		$staffName = $reserveData ["User"] ["japanese_name"];
+		$roomName = $reserveData ["Room"] ["room_name"];
+		$startTime = $reserveData[0]["start_time"];
+		$endTime = $reserveData[0]["end_time"];
+
+		$mailMessage = "スタッフ名　" . $staffName . "さん\r\n ". "予約開始時刻　" . $startTime;
+		$mailMessage .=" \r\n " . "予約終了時刻　" . $endTime;
+		$mailMessage .=" \r\n " . "予約部屋名　" . $roomName;
+
+		return $mailMessage;
+	}
 
 	/**
 	 * 対象期間を外れる予約日程を削除する
@@ -293,6 +330,9 @@ class Reserve extends AppModel {
 					'conditions' => array (
 							'Reserve.user_id' => $userId,
 							'Reserve.end_reserve_date >=' => date ( "Y/m/d" )
+					),
+					'order' => array(
+							'Reserve.start_reserve_date' =>'asc'
 					)
 			);
 			$reservedList = $this->find('all',$conditions);
