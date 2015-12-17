@@ -79,8 +79,7 @@ class Reserve extends AppModel {
 		$startTime = $reserveData[0]["start_time"];
 		$endTime = $reserveData[0]["end_time"];
 
-		$mailMessage = "スタッフ名　" . $staffName . "さん\r\n ". "予約開始時刻　" . $startTime;
-		$mailMessage .=" \r\n " . "予約終了時刻　" . $endTime;
+		$mailMessage = "スタッフ名　" . $staffName . "さん\r\n ". "予約時刻　" . $startTime."～". $endTime;
 		$mailMessage .=" \r\n " . "予約部屋名　" . $roomName;
 
 		return $mailMessage;
