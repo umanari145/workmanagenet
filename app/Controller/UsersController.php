@@ -62,29 +62,36 @@ class UsersController extends AppController {
 
 		$user = $this->Auth->user ();
 		if (empty ( $user )) {
-			$this->Session->setFlash (__ ( 'データが存在しません。' ) );
+			$this->Session->setFlash ( __ ( 'データが存在しません。' ) );
 		}
 
 		if ($this->request->is ( 'post' )) {
-			//部屋の予約
+			// 部屋の予約
 			if (! empty ( $this->request->data ['User'] ['start_date_pull_down_id'] )) {
 				$this->request->data ['User'] ['user_id'] = $userId;
-				$this->Reserve->reserveRoom ( $this->request->data );
-				$this->Reserve->sendReserveMail( $this->Reserve->getLastInsertID());
-				$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
+
+				$resReserve = $this->Reserve->reserveRoom ( $this->request->data );
+				if ($resReserve !== false) {
+					if (CAN_SEND_MAIL) {
+						$this->Reserve->sendReserveMail ( $this->Reserve->getLastInsertID () );
+					}
+					$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
+				} else {
+					$this->Session->setFlash ( __ ( 'その部屋はすでに予約されています。' ) );
+				}
 			}
-			//部屋と予約対象期間の変更
+			// 部屋と予約対象期間の変更
 			$roomId = $this->request->data ['User'] ['room_id'];
 			$startPeriod = $this->request->data ['User'] ['reserve_period'];
 		} else {
 			$resData = $this->Room->find ( 'first', array (
 					'conditions' => array (
 							'Room.is_delete' => 0,
-							'Room.room_name <>'=> '在宅'
+							'Room.room_name <>' => '在宅'
 					)
 			) );
 			$roomId = $resData ['Room'] ['id'];
-			$startPeriod = date('Y/m/d');
+			$startPeriod = date ( 'Y/m/d' );
 		}
 
 		$roomIdArr = $this->Room->getRoomList ();
@@ -175,7 +182,9 @@ class UsersController extends AppController {
 				if (empty ( $worktimeId )) {
 					$worktimeId = $this->request->data ["Worktime"] ["id"];
 				}
-				$this->Worktime->sendWorkMail ( $worktimeId );
+				if( CAN_SEND_MAIL ){
+					$this->Worktime->sendWorkMail ( $worktimeId );
+				}
 			}
 		}
 

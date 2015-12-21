@@ -273,7 +273,7 @@ class Reserve extends AppModel {
 						'Reserve.end_reserve_date >' => $data ["start_reserve_time"]
 				)
 		);
-		return $this->find ( 'count', $conditions ) > 0;
+		return  $this->find ( 'count', $conditions ) > 0;
 	}
 
 	/**
@@ -307,7 +307,20 @@ class Reserve extends AppModel {
 				'end_reserve_date'=>$endTime
 		);
 
+		//ajaxがherokuできいていないので
+		//サーバー側で重複を処理
+		$resistData2 = array(
+				'user_id'=>$data['User']['user_id'],
+				'room_id'=>$data['User']['room_id'],
+				'start_reserve_time'=>$startTime,
+				'end_reserve_time'=>$endTime
+		);
+		if( $this->hasDuplicateReserved($resistData2)){
+			return false;
+		}
+
 		$this->save($resistData);
+		return true;
 	}
 
 	/**
