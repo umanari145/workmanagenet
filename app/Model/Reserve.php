@@ -267,7 +267,6 @@ class Reserve extends AppModel {
 	public function hasDuplicateReserved($data) {
 		$conditions = array (
 				'conditions' => array (
-						'Reserve.user_id' => $data ["user_id"],
 						'Reserve.room_id' => $data ["room_id"],
 						'Reserve.start_reserve_date <' => $data ["end_reserve_time"],
 						'Reserve.end_reserve_date >' => $data ["start_reserve_time"]
@@ -306,23 +305,7 @@ class Reserve extends AppModel {
 				'start_reserve_date'=>$startTime,
 				'end_reserve_date'=>$endTime
 		);
-
-		//ajaxがherokuできいていないので
-		//サーバー側で重複を処理
-		$resistData2 = array(
-				'user_id'=>$data['User']['user_id'],
-				'room_id'=>$data['User']['room_id'],
-				'start_reserve_time'=>$startTime,
-				'end_reserve_time'=>$endTime
-		);
-		$resReserve = $this->hasDuplicateReserved($resistData2);
-		var_dump( $resReserve);
-		if( $resReserve ){
-			return false;
-		}
-
 		$this->save($resistData);
-		return true;
 	}
 
 	/**
