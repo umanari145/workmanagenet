@@ -315,7 +315,9 @@ class Reserve extends AppModel {
 				'start_reserve_time'=>$startTime,
 				'end_reserve_time'=>$endTime
 		);
-		if( $this->hasDuplicateReserved($resistData2)){
+		$resReserve = $this->hasDuplicateReserved($resistData2);
+		var_dump( $resReserve);
+		if( $resReserve ){
 			return false;
 		}
 
