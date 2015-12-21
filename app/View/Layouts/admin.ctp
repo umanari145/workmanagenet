@@ -26,7 +26,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<title>
 		勤怠管理アプリ管理画面
 	</title>
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css">
+<link rel="stylesheet"
+	href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css">
 
 	<?php
 		echo $this->Html->meta('icon');
@@ -43,10 +44,12 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('script');
 	?>
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+    <script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
 
-    <script>
+<script>
     $(function() {
         $(".datepicker").datepicker();
       });
@@ -56,7 +59,12 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<div id="container">
 		<input type="hidden" id="entry_url" value="<?php echo ENTRY_URL; ?>">
 		<div id="header">
-			<h1>勤怠管理アプリ管理画面</h1>
+			<h1><?php
+	echo $this->Html->link ( '勤怠管理アプリ管理画面', array (
+			'controller' => 'admin',
+			'action' => 'index'
+	) );
+	?></h1>
 		</div>
 		<div id="content">
 
@@ -64,9 +72,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 			<?php echo $this->fetch('content'); ?>
 		</div>
 		<div id="footer">
-			<p>
-				勤怠管理アプリ管理画面
-			</p>
+			<p>勤怠管理アプリ管理画面</p>
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
