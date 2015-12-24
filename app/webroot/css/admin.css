@@ -183,6 +183,27 @@ table .work_time, table .work_time_id,tale input{
 	font-size:7pt;
 }
 
+div.service_ratio table{
+    border-collapse: collapse;
+    table-layout: fixed;
+    width:20%;
+}
+
+div.service_ratio table tr td{
+	padding:0;
+	vertical-align: middle;
+}
+
+div.service_ratio_point,div.service_name{
+	font-size:12pt;
+	margin:7px 0;
+	text-align:center;
+}
+
+div.service_ratio_menu{
+	margin:10px;
+	width:100px;
+}
 
 /* SQL log */
 .cake-sql-log {
@@ -299,6 +320,7 @@ form div {
 	padding: .5em;
 	vertical-align: text-top;
 }
+
 form .input {
 	color: #444;
 }
@@ -332,7 +354,6 @@ input.datepicker{
 	font-size:12px;
 	width:100px;
 }
-
 
 
 select {

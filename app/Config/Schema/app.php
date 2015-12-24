@@ -89,6 +89,19 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $services = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
+		'service_name' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 200, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'ratio' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'created' => array('type' => 'timestamp', 'null' => true, 'default' => null),
+		'modified' => array('type' => 'timestamp', 'null' => true, 'default' => null),
+		'is_delete' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $users = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'chatgirl_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),

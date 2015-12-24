@@ -32,4 +32,5 @@ class ChecklogoutShell extends AppShell {
 			$this->Worktime->updateForgetWorkLine ( $forgetWorkData );
 		}
 	}
+
 }

@@ -13,7 +13,8 @@ class AdminController extends AppController {
 			'Worktime',
 			'Activeworktime',
 			'Room',
-			'Reserve'
+			'Reserve',
+			'Service'
 	);
 	public $layout = "admin";
 	public $components = array (
@@ -155,8 +156,6 @@ class AdminController extends AppController {
 		$this->set ( "workdetail", $workDetailData );
 	}
 
-
-
 	/**
 	 * 稼働履歴CSVアップロード
 	 */
@@ -224,6 +223,85 @@ class AdminController extends AppController {
 		$this->set ( "activeWorkData", $activeWorkData );
 	}
 
+	/**
+	 * サービス内容による報酬額の変更
+	 */
+	public function registservice(){
+		$this->autoRender = FALSE;
+		//既存の稼働履歴からサービスリストの取得
+		$serviceList = $this->Activeworktime->getServiceList();
+		//マスターを見てなければ登録
+		$this->Service->checkMasterServiceData( $serviceList );
+	}
+
+	/**
+	 * サービス内容の一覧
+	 */
+	public function serviceindex() {
+		$this->set ( 'serviceList', $this->Service->getServiceList() );
+	}
+
+	/**
+	 * サービス内容の追加
+	 */
+	public function serviceadd() {
+		// POST の時だけ
+		if ($this->request->is ( 'post' )) {
+			if ($this->Service->save ( $this->request->data )) {
+				$this->Session->setFlash ( __ ( 'サービスの登録が成功しました。' ) );
+				$this->redirect ( array (
+						'action' => 'serviceindex'
+				) );
+			} else {
+				$this->Session->setFlash ( 'サービスの登録に失敗しました。' );
+			}
+		}
+		$this->render ( 'serviceindex' );
+	}
+
+	/**
+	 * サービス時間の修正のajax
+	 */
+	public function updateservice() {
+		$this->autoRender = FALSE;
+		if ($this->request->is ( 'ajax' )) {
+			$data = $this->request->data;
+			if ($this->Service->save ( $data )) {
+				echo "success";
+			} else {
+				echo "fail";
+			}
+		}
+	}
+
+	/**
+	 * サービスの削除
+	 *
+	 * @param string $id サービスID
+	 * @throws NotFoundException
+	 */
+	public function servicedelete($id = null) {
+		$this->Service->id = $id;
+
+		if (! $this->Service->exists ()) {
+			throw new NotFoundException ( __ ( '部屋が存在しません。' ) );
+		}
+
+		$data = array (
+				"id" => $id,
+				"is_delete" => 1
+		);
+
+		if ($this->Service->save ( $data )) {
+			$this->Session->setFlash ( 'サービスの削除が完了しました。' );
+			$this->redirect ( array (
+					'action' => 'serviceindex'
+			) );
+		} else {
+			$this->Sessin->setFlash ( 'サービスの削除に失敗しました' );
+		}
+		$this->render ( 'serviceindex' );
+	}
 
 	/**
 	 * 勤務時間の修正のajax
@@ -241,7 +319,7 @@ class AdminController extends AppController {
 	}
 	public function beforeFilter() {
 		AuthComponent::$sessionKey = 'Auth.admins';
-		$this->Auth->allow ( 'login', 'logout' );
+		$this->Auth->allow ( 'login', 'logout','registservice');
 	}
 
 	/**

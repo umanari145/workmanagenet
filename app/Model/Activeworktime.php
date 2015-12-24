@@ -43,10 +43,29 @@ class Activeworktime extends AppModel {
 			if( empty( $userData )){
 				throw new NotFoundException('存在しないユーザーが含まれています。');
 			}
-			$this->data["Activeworktime"]["reward"] = ceil($this->data ["Activeworktime"]["point"]*USER_REWARD_RATIO);
+			$this->data["Activeworktime"]["reward"] = $this->calcRewardRatio($this->data ["Activeworktime"]["point"],$this->data ["Activeworktime"]["service_name"]);
 			$this->data["Activeworktime"]["user_id"] = $userData["User"]["id"];
 		}
 		return true;
+	}
+
+	/**
+	 * サービス比率と報酬額の計算
+	 *
+	 * @param unknown $point ポイント
+	 * @param unknown $service_name サービス名
+	 * @return number 報酬額
+	 */
+	private function calcRewardRatio( $point, $service_name ){
+		App::import ( 'Model', 'Service' );
+		$ServiceModel = new Service();
+		$ratio = $ServiceModel->getRatioByServiceName( $service_name);
+		if( empty( $ratio )){
+			throw new NotFoundException('存在しないサービスが含まれています。');
+		}
+		//有効数字のバグをstringにキャストすることで回避
+		$reward = ceil((string)($point * $ratio));
+		return $reward;
 	}
 
 	/**
@@ -143,6 +162,29 @@ class Activeworktime extends AppModel {
 		return $activeWorktimeRecord;
 	}
 
+	/**
+	 * 稼働履歴からサービス内容の一覧を取得する
+	 */
+	public function getServiceList(){
+
+		$params = array (
+				'fields' => array (
+						'Activeworktime.service_name',
+				),
+				'conditions' => array (
+						'Activeworktime.is_delete' => 0,
+				),
+				'group' => array(
+						'Activeworktime.service_name'
+				)
+		);
+		$serviceList0 = $this->find ( 'list', $params );
+		$serviceList = array();
+		if( !empty( $serviceList0)){
+			$serviceList = array_values($serviceList0);
+		}
+		return $serviceList;
+	}
 
 	/**
 	 * csvダウンロード用にデータを加工
