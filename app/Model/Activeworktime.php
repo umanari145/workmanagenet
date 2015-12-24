@@ -50,6 +50,33 @@ class Activeworktime extends AppModel {
 	}
 
 	/**
+	 * character_id,begin,endが同一のレコードか否かを判定
+	 *
+	 * @param unknown $data
+	 */
+	public function isSameData( $data = array()){
+		$params = array (
+				'conditions' => array (
+						'User.chatgirl_id'         => $data['Activeworktime']['chatgirl_id'],
+						'Activeworktime.is_delete' => 0,
+						'Activeworktime.begin'     => $data['Activeworktime']['begin'],
+						'Activeworktime.end'       => $data['Activeworktime']['end']
+				)
+		);
+		$count = $this->find ( 'count', $params );
+		return $count > 0;
+	}
+
+	/**
+	 * CSVアップロードに関して不正なデータのコンバート
+	 *
+	 * @param unknown $data CSVアップロードのデータ
+	 */
+	public function convertIlleagalCsvUploadData( &$data = array()){
+		$data["Activeworktime"]["handlename"]=str_replace('―','-', $data["Activeworktime"]["handlename"]);
+	}
+
+	/**
 	 * ユーザーごとの報酬とアカウントデータを取得
 	 *
 	 * @return Ambigous <multitype:, NULL>

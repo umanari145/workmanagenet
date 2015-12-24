@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Copyright 2009 - 2013, Cake Development Corporation (http://cakedc.com)
 *
@@ -52,6 +54,7 @@ class CsvImportBehavior extends ModelBehavior {
 			$this->settings[$Model->alias] = array(
 					'delimiter' => ',',
 					'enclosure' => '"',
+					'escape'    => '^',
 					'hasHeader' => true
 			);
 		}
@@ -69,10 +72,12 @@ class CsvImportBehavior extends ModelBehavior {
 		if ($handle->eof()) {
 			return false;
 		}
-		return $handle->fgetcsv(
+		$row = $handle->fgetcsv(
 				$this->settings[$Model->alias]['delimiter'],
-				$this->settings[$Model->alias]['enclosure']
-		);
+				$this->settings[$Model->alias]['enclosure'],
+				$this->settings[$Model->alias]['escape']
+				);
+		return $row;
 	}
 
 	/**
@@ -128,6 +133,14 @@ class CsvImportBehavior extends ModelBehavior {
 					$data[$Model->alias][$col]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS") : '';
 				}
 			}
+			#同一chartgirl_id begin,endのチェック
+			App::import('Model','Activeworktime');
+			$activeworktime = new Activeworktime();
+			if( $activeworktime->isSameData( $data ) ){
+				continue;
+			}
+
+			$activeworktime->convertIlleagalCsvUploadData( $data );
 
 			$data = Set::merge($data, $fixed);
 			$Model->create();
