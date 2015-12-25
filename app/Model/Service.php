@@ -79,18 +79,4 @@ class Service extends AppModel {
 		return $this->find('all',$params);
 	}
 
-	/**
-	 * サービスのraioデータを全て保存
-	 */
-	public function registRatioData($dataList = array()) {
-		$totalRecord = array();
-		foreach ( $dataList as $id => $ratio ) {
-			$record = array (
-					'id' => $id,
-					'ratio' => $ratio
-			);
-			$totalRecord [] = $record;
-		}
-		$this->saveAll( $totalRecord);
-	}
 }

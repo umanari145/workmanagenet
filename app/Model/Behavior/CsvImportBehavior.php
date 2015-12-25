@@ -113,7 +113,9 @@ class CsvImportBehavior extends ModelBehavior {
 		$db->begin($Model);
 		$saved = array();
 		$i = 0;
+		$csvLine = 1;
 		while (($row = $this->_getCSVLine($Model, $handle)) !== false) {
+		$csvLine++;
 
 			if( is_null($row[0])){
 				continue;
@@ -139,7 +141,7 @@ class CsvImportBehavior extends ModelBehavior {
 			if( $activeworktime->isSameData( $data ) ){
 				continue;
 			}
-
+			//文字のコンバート
 			$activeworktime->convertIlleagalCsvUploadData( $data );
 
 			$data = Set::merge($data, $fixed);
@@ -158,6 +160,13 @@ class CsvImportBehavior extends ModelBehavior {
 				$error = true;
 				$this->_notify($Model, 'onImportError', $this->errors[$Model->alias][$i]);
 			}
+
+			//カスタムエラーチェック
+			$errorMessage = $activeworktime->checkRequiredData($data);
+			if ( !empty( $errorMessage )){
+				throw new Exception( $csvLine . "行目でエラーが発生ました。 エラー内容[" . $errorMessage . "]" );
+			}
+
 
 			// save the row
 			if (!$error && !$Model->saveAll($data, array('validate' => false,'atomic' => false))) {

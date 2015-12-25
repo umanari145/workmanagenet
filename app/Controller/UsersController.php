@@ -2,7 +2,7 @@
 App::uses ( 'AppController', 'Controller' );
 class UsersController extends AppController {
 
-	public $helpers = array('Html', 'Form');
+	public $helpers = array('Html', 'Form','Number');
 
 	public $uses = array (
 			'User',
@@ -75,7 +75,7 @@ class UsersController extends AppController {
 					if (CAN_SEND_MAIL) {
 						$this->Reserve->sendReserveMail ( $this->Reserve->getLastInsertID () );
 					}
-					$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
+					$this->Session->setFlash ( '部屋の予約が成功しました。','default' , array('class' => 'success')  );
 				} else {
 					$this->Session->setFlash ( __ ( 'その部屋はすでに予約されています。' ) );
 				}
@@ -147,7 +147,7 @@ class UsersController extends AppController {
 				$this->Session->setFlash ( __ ( '不正なアクセスです' ) );
 			} else {
 				$this->Reserve->delete ( $reserveId );
-				$this->Session->setFlash ( __ ( '予約データを削除しました。' ) );
+				$this->Session->setFlash ( '予約データを削除しました。','default' , array('class' => 'success')  );
 			}
 		}
 		$this->set ( "userInfo", $this->Auth->user () );

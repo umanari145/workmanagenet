@@ -393,7 +393,8 @@ input[type=submit] {
 	font-size: 110%;
 	width: auto;
 }
-form .submit input[type=submit] {
+
+form .submit input[type=submit]{
 	background:#62af56;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#76BF6B), to(#3B8230));
 	background-image: -webkit-linear-gradient(top, #76BF6B, #3B8230);
@@ -492,6 +493,7 @@ p.error,
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 .success {
+	font-weight:bold;
 	clear: both;
 	color: #fff;
 	border: 1px solid rgba(0, 0, 0, 0.5);
@@ -523,6 +525,7 @@ p.error em {
 	margin: 1em 0;
 }
 .success {
+	font-weight:bold;
 	color: #fff;
 }
 
@@ -577,6 +580,7 @@ input[type=submit],
 	border-color: #acacac;
 	text-decoration: none;
 }
+
 input[type=submit]:active,
 .actions ul li a:active,
 .actions a:active {
@@ -595,7 +599,9 @@ input[type=submit]:active,
 	text-decoration: none;
 }
 
-
+#aggregate_start_date,#aggregate_end_date{
+	padding:5px;
+}
 
 /** Related **/
 .related {

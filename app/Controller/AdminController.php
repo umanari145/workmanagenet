@@ -5,7 +5,8 @@ class AdminController extends AppController {
 	public $helpers = array (
 			'Html',
 			'Form',
-			'Customize'
+			'Customize',
+			'Number'
 	);
 	public $uses = array (
 			'Admin',
@@ -57,7 +58,7 @@ class AdminController extends AppController {
 		// POST の時だけ
 		if ($this->request->is ( 'post' )) {
 			if ($this->User->save ( $this->request->data )) {
-				$this->Session->setFlash ( __ ( 'スタッフの登録が成功しました。' ) );
+				$this->Session->setFlash ( 'スタッフの登録が成功しました。' ,'default' , array('class' => 'success') );
 				$this->redirect ( array (
 						'action' => 'userindex'
 				) );
@@ -85,7 +86,7 @@ class AdminController extends AppController {
 
 
 			if ($this->User->save ( $this->request->data )) {
-				$this->Session->setFlash ( __ ( 'スタッフの編集が成功しました。' ) );
+				$this->Session->setFlash ( 'スタッフの編集が成功しました。','default' , array('class' => 'success') );
 				$this->redirect ( array (
 						'action' => 'userindex'
 				) );
@@ -118,7 +119,7 @@ class AdminController extends AppController {
 		);
 
 		if ($this->User->save ( $data )) {
-			$this->Session->setFlash ( 'スタッフの削除が完了しました。' );
+			$this->Session->setFlash ( 'スタッフの削除が完了しました。','default' , array('class' => 'success') );
 			$this->redirect ( array (
 					'action' => 'userindex'
 			) );
@@ -159,11 +160,9 @@ class AdminController extends AppController {
 	/**
 	 * 稼働履歴CSVアップロード
 	 */
-	public function activeworkcsvupload() {
+	private function activeworkcsvupload() {
 		if ($this->request->is ( 'post' )) {
-
 			try {
-
 				$filename = $this->request->data ["Activeworktime"] ["CsvFile"] ["tmp_name"];
 				if (file_exists ( $filename )) {
 					$db = $this->Activeworktime->getDataSource ();
@@ -171,7 +170,7 @@ class AdminController extends AppController {
 					$this->Activeworktime->importCSV ( $filename );
 					if (! $this->Activeworktime->getImportErrors ()) {
 						$db->commit ( $this->Activeworktime );
-						$this->Session->setFlash ( __ ( 'CSV登録に成功しました。' ) );
+						$this->Session->setFlash ( 'CSV登録に成功しました。' ,'default' , array('class' => 'success') );
 					} else {
 						$db->rollback ( $this->Activeworktime );
 						$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。' ) );
@@ -179,52 +178,54 @@ class AdminController extends AppController {
 				} else {
 					$this->Session->setFlash ( __ ( 'ファイルが存在していません。' ) );
 				}
-
 			} catch ( Exception $e ) {
 				$this->Session->setFlash ( __ ( $e->getMessage () ) );
 			}
 		}
-
-		$this->render ( "acitiveworkcsvupload" );
 	}
+
 
 	/**
 	 * 稼働履歴一覧
 	 */
 	public function useractiveworkdata() {
-		if (! empty ( $this->request->query )) {
 
-			// 集計
-			if (! empty ( $this->request->query ["aggregate"] )) {
-				$activeWorkData = $this->Activeworktime->findActiveWorkDataByQuery ( $this->request->query );
-			}
-
-			// ダウンロード
-			if (! empty ( $this->request->query ["download"] )) {
-				$this->autoRender=false;
-				$downloadData = array();
-				$downloadData = $this->Activeworktime->getPointGroupingUser ($this->request->query );
-				$bodyData = $this->Activeworktime->exportCSV ( $downloadData );
-				$csvFileName=$this->Activeworktime->makeActiveWorkFileName($this->request->query);
- 				// アクセスした時にダウンロードさせる為のヘッダを設定します。
-			    header ("Content-disposition: attachment; filename=" . $csvFileName);
-			    header ("Content-type: application/octet-stream; name=" . $csvFileName);
-			    // バッファを出力して完成です。
-			    print($bodyData);
-			    exit;
-			}
-		} else {
-			$activeWorkData = $this->Activeworktime->find ( 'all' );
-			$this->request->query ["aggregate_start_date"] = "";
-			$this->request->query ["aggregate_end_date"] = "";
+		//csvアップロード
+		if ( !empty($this->request->data["upload"]) ) {
+			$this->activeworkcsvupload();
 		}
 
-		$this->set ( 'query', $this->request->query );
+		// ダウンロード
+		if (! empty ( $this->request->data["download"] )) {
+			$this->autoRender=false;
+			$downloadData = array();
+			$downloadData = $this->Activeworktime->getPointGroupingUser ($this->request->data["Activeworktime"] );
+			$bodyData = $this->Activeworktime->exportCSV ( $downloadData );
+			$csvFileName=$this->Activeworktime->makeActiveWorkFileName($this->request->data["Activeworktime"]);
+			// アクセスした時にダウンロードさせる為のヘッダを設定します。
+			header ("Content-disposition: attachment; filename=" . $csvFileName);
+			header ("Content-type: application/octet-stream; name=" . $csvFileName);
+			// バッファを出力して完成です。
+			print($bodyData);
+			exit;
+		}
+
+		//ポストにない場合入力補完
+		 if( !isset( $this->request->data["Activeworktime"]["aggregate_start_date"]) &&
+		     !isset( $this->request->data["Activeworktime"]["aggregate_end_date"])){
+			//初期データ
+			$this->request->data["Activeworktime"]["aggregate_start_date"] = date("Y-m-01");
+			$this->request->data["Activeworktime"]["aggregate_end_date"] = "";
+		}
+
+		$activeWorkData = $this->Activeworktime->findActiveWorkDataByQuery ( $this->request->data["Activeworktime"] );
+
+		$this->set ( 'query', $this->request->data["Activeworktime"] );
 		$this->set ( "activeWorkData", $activeWorkData );
 	}
 
 	/**
-	 * サービス内容による報酬額の変更
+	 * 稼働履歴からサービス内容の一覧を取得する
 	 */
 	public function registservice(){
 		$this->autoRender = FALSE;
@@ -235,7 +236,7 @@ class AdminController extends AppController {
 	}
 
 	/**
-	 * サービス内容の一覧
+	 * サービス内容の一覧の表示
 	 */
 	public function serviceindex() {
 		$this->set ( 'serviceList', $this->Service->getServiceList() );
@@ -248,7 +249,7 @@ class AdminController extends AppController {
 		// POST の時だけ
 		if ($this->request->is ( 'post' )) {
 			if ($this->Service->save ( $this->request->data )) {
-				$this->Session->setFlash ( __ ( 'サービスの登録が成功しました。' ) );
+				$this->Session->setFlash ( 'サービスの登録が成功しました。','default' , array('class' => 'success') );
 				$this->redirect ( array (
 						'action' => 'serviceindex'
 				) );
@@ -284,7 +285,7 @@ class AdminController extends AppController {
 		$this->Service->id = $id;
 
 		if (! $this->Service->exists ()) {
-			throw new NotFoundException ( __ ( '部屋が存在しません。' ) );
+			throw new NotFoundException ( __ ( 'サービスが存在しません。' ) );
 		}
 
 		$data = array (
@@ -293,7 +294,7 @@ class AdminController extends AppController {
 		);
 
 		if ($this->Service->save ( $data )) {
-			$this->Session->setFlash ( 'サービスの削除が完了しました。' );
+			$this->Session->setFlash ( 'サービスの削除が完了しました。' ,'default' , array('class' => 'success'));
 			$this->redirect ( array (
 					'action' => 'serviceindex'
 			) );
@@ -319,7 +320,7 @@ class AdminController extends AppController {
 	}
 	public function beforeFilter() {
 		AuthComponent::$sessionKey = 'Auth.admins';
-		$this->Auth->allow ( 'login', 'logout','registservice');
+		$this->Auth->allow ( 'login', 'logout');
 	}
 
 	/**
@@ -344,7 +345,7 @@ class AdminController extends AppController {
 		// POST の時だけ
 		if ($this->request->is ( 'post' )) {
 			if ($this->Room->save ( $this->request->data )) {
-				$this->Session->setFlash ( __ ( '部屋の登録が成功しました。' ) );
+				$this->Session->setFlash ( '部屋の登録が成功しました。','default' , array('class' => 'success') );
 				$this->redirect ( array (
 						'action' => 'roomindex'
 				) );
@@ -370,7 +371,7 @@ class AdminController extends AppController {
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
 			if ($this->Room->save ( $this->request->data )) {
-				$this->Session->setFlash ( __ ( '部屋の編集が成功しました。' ) );
+				$this->Session->setFlash ( '部屋の編集が成功しました。','default' , array('class' => 'success') );
 				$this->redirect ( array (
 						'action' => 'roomindex'
 				) );
@@ -403,7 +404,7 @@ class AdminController extends AppController {
 		);
 
 		if ($this->Room->save ( $data )) {
-			$this->Session->setFlash ( '部屋の削除が完了しました。' );
+			$this->Session->setFlash ( '部屋の削除が完了しました。','default' , array('class' => 'success') );
 			$this->redirect ( array (
 					'action' => 'roomindex'
 			) );

@@ -11,6 +11,9 @@
 		echo $this->Form->input('transfer_account',array('label'=>'口座情報'));
 	?>
 	</fieldset>
-<input type="submit" value="登録する">
+	<div class="submit">
+		<input type="submit" value="登録する">
+	</div>
+<?php echo $this->Form->end();?>
 </div>
 <?php echo $this->element('left'); ?>

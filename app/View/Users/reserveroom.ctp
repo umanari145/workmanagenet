@@ -1,3 +1,4 @@
+<div class="working_state">
 <?php echo $this->Form->create('User',array('id'=>'roomChange')); ?>
 	<p><?php echo $userInfo["japanese_name"]; ?></p>
 
@@ -49,7 +50,7 @@ echo $this->Form->input ( 'reserve_period',array (
 <?php echo $this->Form->input('registMood' ,array('type' => 'hidden','id'=>'regist_mood_id'));?>
 <?php echo $this->Form->button('部屋を予約する', array('type' => 'button','id'=>'reserve_dialog_button'));?>
 <?php echo $this->Form->end(); ?>
-
+</div>
 <div id="time_question">
 <?php echo $this->Form->create('User',array('id'=>'roomReserve')); ?>
 <?php echo $this->Form->input('user_id' ,array('type' => 'hidden','value'=>$userInfo['id']));?>

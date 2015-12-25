@@ -3,17 +3,17 @@
 
 <div>
 
-	<p><?php echo $userInfo["japanese_name"]; ?></p>
-
 	<p>
-	<?php
+	<span><?php echo $userInfo["japanese_name"]; ?></span>
 
+	<?php
 		echo $this->Html->link ( __ ( 'ログアウトする' ), array (
 			'controller' => 'users',
 			'action' => 'logout'),
     		array('data-role' => 'button', 'role' => 'button')
 			 );
-	?></p>
+	?>
+	</p>
 
 	<p><?php
 			echo $this->Html->link ( __ ( '出勤の予約をする' ), array (
@@ -32,48 +32,9 @@
 
 	?></p>
 
-	<div>
-		<p><?php echo $this->Form->Create();?></p>
-		<p><?php
 
-			echo $this->Form->input ( 'target_month_pulldown_id', array (
-				'label' => "対象月",
-				'options' => $rewardMonthList,
-				'value' => $targetMonthVal
-		) );
-		?>
-<?php if( !empty($montlyReward)):?>
-
-		<dl>
-			<dt>総稼働時間:</dt>
-			<dd>
-				<span id="active_work_sum_time"><?php
-	echo $this->Customize->convertSecondTohms ( $montlyReward [0] [0] ["active_time"] );
-	?></span>
-			</dd>
-
-			<dt>総獲得ポイント:</dt>
-			<dd>
-				<span id="active_work_sum_point">
-	<?php
-	echo $montlyReward [0] [0] ["sum_point"] . "ポイント";
-	?></span>
-			</dd>
-
-			<dt>総獲得報酬:</dt>
-			<dd>
-				<span id="active_work_sum_reward">
-	<?php
-	echo $montlyReward [0] [0] ["sum_reward"] . "円";
-	?></span>
-			</dd>
-		</dl>
-<?php endif;?>
-	<?php echo $this->Form->end();?>
-</div>
-
-
-
+<div class="working_state">
+	<h3>勤務状態</h3>
     <?php echo $this->Form->create('Worktime'); ?>
 
     <?php
@@ -115,7 +76,6 @@
 	}
 
 	?>
-
     <?php
 				echo $this->Form->input ( 'workstatus', array (
 						'type' => 'hidden',
@@ -137,6 +97,49 @@
     <?php echo $this->Form->button($worktimeStatusArray["statusMessage"],$worktimeStatusArray["javascript"]); ?>
 
     <?php echo $this->Form->end(); ?>
-     </div>
+</div>
+
+
+	<div id="staff_score">
+		<h3>勤務成績</h3>
+		<p><?php echo $this->Form->Create();?></p>
+		<p><?php
+
+			echo $this->Form->input ( 'target_month_pulldown_id', array (
+				'label' => "対象月",
+				'options' => $rewardMonthList,
+				'value' => $targetMonthVal
+		) );
+		?>
+	<?php if( !empty($montlyReward)):?>
+
+			<dl>
+				<dt>総稼働時間:</dt>
+				<dd>
+					<span id="active_work_sum_time"><?php
+		echo $this->Customize->convertSecondTohms ( $montlyReward [0] [0] ["active_time"] );
+		?></span>
+				</dd>
+
+				<dt>総獲得ポイント:</dt>
+				<dd>
+					<span id="active_work_sum_point">
+		<?php
+		echo $this->Number->currency( $montlyReward [0] [0] ["sum_point"],'JPY',array('places'=>0,'wholeSymbol'=>"ポイント",'wholePosition'=>'after'));
+		?></span>
+				</dd>
+
+				<dt>総獲得報酬:</dt>
+				<dd>
+					<span id="active_work_sum_reward">
+		<?php
+		echo $this->Number->currency( $montlyReward [0] [0] ["sum_reward"],'JPY',array('places'=>0,'wholeSymbol'=>"円",'wholePosition'=>'after'));
+		?></span>
+				</dd>
+			</dl>
+<?php endif;?>
+	<?php echo $this->Form->end();?>
+</div>
+
 
 </div>

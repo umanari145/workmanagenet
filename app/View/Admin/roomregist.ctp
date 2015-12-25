@@ -7,6 +7,9 @@
 		echo $this->Form->input('note',array('label'=>'備考','type' => 'textarea'));
 	?>
 	</fieldset>
-<input type="submit" value="登録する">
+	<div class="submit">
+		<input type="submit" value="登録する">
+	</div>
+<?php echo $this->Form->end();?>
 </div>
 <?php echo $this->element('left'); ?>

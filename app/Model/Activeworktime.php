@@ -16,21 +16,16 @@ class Activeworktime extends AppModel {
 	);
 
 	/**
-	 * 保存前にcharacter_idをuser_idと紐づけ
-	 *
-	 * (non-PHPdoc)
-	 * @see Model::beforeSave()
+	 * データのバリデーション
+	 * (形式的なチェックができないのでcakeの機能でなく、独自実装)
 	 */
-	public function beforeSave($option = array()) {
+	public function checkRequiredData(&$data = array()) {
+		$errorMessage = "";
+		if (empty ( $data ["Activeworktime"] ["chatgirl_id"] )) {
+			$errorMessage = 'chatgirl_idが存在していません。';
+		} else {
 
-		if( empty ( $this->data ["Activeworktime"] ["chatgirl_id"] ) ){
-			throw new NotFoundException('character_idが存在しないデータが含まれています。');
-		}
-
-
-		if (! empty ( $this->data ["Activeworktime"] ["chatgirl_id"] ) && empty ( $this->data ["Activeworktime"] ["user_id"] )) {
-
-			$chatGirlId = $this->data ["Activeworktime"] ["chatgirl_id"];
+			$chatGirlId = $data ["Activeworktime"] ["chatgirl_id"];
 
 			App::import ( 'Model', 'User' );
 			$UserModel = new User ();
@@ -40,13 +35,24 @@ class Activeworktime extends AppModel {
 					)
 			) );
 
-			if( empty( $userData )){
-				throw new NotFoundException('存在しないユーザーが含まれています。');
+			if (empty ( $userData )) {
+				$errorMessage = '存在しないchatgirl_idが含まれています。';
+				return $errorMessage;
 			}
-			$this->data["Activeworktime"]["reward"] = $this->calcRewardRatio($this->data ["Activeworktime"]["point"],$this->data ["Activeworktime"]["service_name"]);
-			$this->data["Activeworktime"]["user_id"] = $userData["User"]["id"];
+
+			$res = $this->calcRewardRatio ( $data ["Activeworktime"] ["point"], $data ["Activeworktime"] ["service_name"] );
+			$reward = "";
+			if ($res !== false) {
+				$reward = $res;
+			} else {
+				$errorMessage = '存在しないサービスが含まれています。';
+				return $errorMessage;
+			}
+
+			$data ["Activeworktime"] ["reward"] = $reward;
+			$data ["Activeworktime"] ["user_id"] = $userData ["User"] ["id"];
 		}
-		return true;
+		return $errorMessage;
 	}
 
 	/**
@@ -54,14 +60,14 @@ class Activeworktime extends AppModel {
 	 *
 	 * @param unknown $point ポイント
 	 * @param unknown $service_name サービス名
-	 * @return number 報酬額
+	 * @return number 報酬額(存在しない場合false)
 	 */
 	private function calcRewardRatio( $point, $service_name ){
 		App::import ( 'Model', 'Service' );
 		$ServiceModel = new Service();
 		$ratio = $ServiceModel->getRatioByServiceName( $service_name);
-		if( empty( $ratio )){
-			throw new NotFoundException('存在しないサービスが含まれています。');
+		if( empty( $ratio ) ){
+			return FALSE;
 		}
 		//有効数字のバグをstringにキャストすることで回避
 		$reward = ceil((string)($point * $ratio));
@@ -218,6 +224,9 @@ class Activeworktime extends AppModel {
 						'Activeworktime.is_delete' => 0,
 						'Activeworktime.begin >= ' => $aggregate_start_date,
 						'Activeworktime.end <= ' => $aggregate_end_date
+				),
+				'order'=>array(
+						'Activeworktime.begin DESC'
 				)
 		) );
 		return $activeWorkDataList;
