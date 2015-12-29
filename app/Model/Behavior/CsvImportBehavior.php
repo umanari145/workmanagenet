@@ -10,7 +10,6 @@
 * @copyright Copyright 2009 - 2013, Cake Development Corporation (http://cakedc.com)
 * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
 */
-
 /**
  * Utils Plugin
 *
@@ -54,7 +53,6 @@ class CsvImportBehavior extends ModelBehavior {
 			$this->settings[$Model->alias] = array(
 					'delimiter' => ',',
 					'enclosure' => '"',
-					'escape'    => '^',
 					'hasHeader' => true
 			);
 		}
@@ -68,14 +66,13 @@ class CsvImportBehavior extends ModelBehavior {
 	 * @param SplFileObject $handle CSV file handler
 	 * @return array list of attributes fetched from the CSV file
 	 */
-	protected function _getCSVLine(Model &$Model, SplFileObject $handle) {
-		if ($handle->eof()) {
+	protected function _getCSVLine(Model &$Model, $handle) {
+		if ($handle === false) {
 			return false;
 		}
-		$row = $handle->fgetcsv(
+		$row = fgetcsv($handle,0,
 				$this->settings[$Model->alias]['delimiter'],
-				$this->settings[$Model->alias]['enclosure'],
-				$this->settings[$Model->alias]['escape']
+				$this->settings[$Model->alias]['enclosure']
 				);
 		return $row;
 	}
@@ -87,7 +84,7 @@ class CsvImportBehavior extends ModelBehavior {
 	 * @param SplFileObject $handle CSV file handler
 	 * @return array list of attributes fetched from the CSV file
 	 */
-	protected function _getHeader(Model &$Model, SplFileObject $handle) {
+	protected function _getHeader(Model &$Model, $handle) {
 		if ($this->settings[$Model->alias]['hasHeader'] === true) {
 			$header = $this->_getCSVLine($Model, $handle);
 		} else {
@@ -95,6 +92,22 @@ class CsvImportBehavior extends ModelBehavior {
 		}
 		return $header;
 	}
+
+	/**
+	 * UTF8にしてファイルハンドラを返す
+	 * @param unknown $filePath ファイルパス
+	 * @return resource ファイルポインタ
+	 */
+	private function convertFileEncoding( $filePath){
+		$data = file_get_contents($filePath);
+		$data = mb_convert_encoding($data, 'UTF-8', 'sjis-win');
+		$temp = tmpfile();
+		$csv  = array();
+		fwrite($temp, $data);
+		rewind($temp);
+		return $temp;
+	}
+
 
 	/**
 	 * Returns a list of keys representing the columns of the CSV file
@@ -107,7 +120,10 @@ class CsvImportBehavior extends ModelBehavior {
 	 * @return mixed boolean indicating the success of the operation or list of saved records
 	 */
 	public function importCSV(Model &$Model, $file, $fixed = array(), $returnSaved = false) {
-		$handle = new SplFileObject($file, 'rb');
+
+
+
+		$handle = $this->convertFileEncoding( $file);
 		$header = $this->_getHeader($Model, $handle);
 		$db = $Model->getDataSource();
 		$db->begin($Model);
@@ -127,14 +143,15 @@ class CsvImportBehavior extends ModelBehavior {
 				if (strpos($col, '.') !== false) {
 					$keys = explode('.', $col);
 					if (isset($keys[2])) {
-						$data[$keys[0]][$keys[1]][$keys[2]]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS"): '';
+						$data[$keys[0]][$keys[1]][$keys[2]]= (isset($row[$k])) ? $row[$k]: '';
 					} else {
-						$data[$keys[0]][$keys[1]]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS") : '';
+						$data[$keys[0]][$keys[1]]= (isset($row[$k])) ? $row[$k]: '';
 					}
 				} else {
-					$data[$Model->alias][$col]= (isset($row[$k])) ? mb_convert_encoding($row[$k],"UTF-8","SJIS") : '';
+					$data[$Model->alias][$col]= (isset($row[$k])) ?$row[$k]: '';
 				}
 			}
+
 			#同一chartgirl_id begin,endのチェック
 			App::import('Model','Activeworktime');
 			$activeworktime = new Activeworktime();

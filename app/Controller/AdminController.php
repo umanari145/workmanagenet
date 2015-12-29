@@ -165,6 +165,7 @@ class AdminController extends AppController {
 			try {
 				$filename = $this->request->data ["Activeworktime"] ["CsvFile"] ["tmp_name"];
 				if (file_exists ( $filename )) {
+
 					$db = $this->Activeworktime->getDataSource ();
 					$db->begin ( $this->Activeworktime );
 					$this->Activeworktime->importCSV ( $filename );
