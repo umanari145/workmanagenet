@@ -74,6 +74,12 @@ class User extends AppModel {
 			$user ["User"] ["work_count"] = $work_count;
 			// 当月稼働時間の計算
 			$user ["User"] ["work_sum_time"] = $work_sum_time;
+
+			App::import ( 'Model', 'Activeworktime' );
+			$ActiveWorkModel = new Activeworktime();
+			$activeworkData = $ActiveWorkModel->getMonthlyReward($user['User']['id'], date('Y/m'));
+
+			$user['User']['sum_reward'] = $activeworkData[0][0]['sum_reward'];
 		}
 	}
 
@@ -165,5 +171,27 @@ class User extends AppModel {
 				)
 		);
 		return $this->find ( 'first', $conditions );
+	}
+
+	/**
+	 * ユーザー一覧(プルダウン用のメソッド)
+	 *
+	 * @return Ambigous <multitype:, NULL>
+	 */
+	public function getUserList() {
+		$userList=[];
+		$conditions = array (
+				'fields' => array (
+						'id',
+						'japanese_name'
+				),
+				'conditions' => array (
+						'User.is_delete' => 0
+				)
+		);
+		$userList = $this->find ( 'list', $conditions );
+		$userList[0] = "全員";
+		ksort( $userList);
+		return $userList;
 	}
 }

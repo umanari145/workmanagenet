@@ -197,10 +197,10 @@ class AdminController extends AppController {
 		}
 
 		// ダウンロード
-		if (! empty ( $this->request->data["download"] )) {
+		if (! empty ( $this->request->data["download"]) && !empty( $this->request->data["account_check"]) ) {
 			$this->autoRender=false;
 			$downloadData = array();
-			$downloadData = $this->Activeworktime->getPointGroupingUser ($this->request->data["Activeworktime"] );
+			$downloadData = $this->Activeworktime->getPointGroupingUser ($this->request->data["account_check"] );
 			$bodyData = $this->Activeworktime->exportCSV ( $downloadData );
 			$csvFileName=$this->Activeworktime->makeActiveWorkFileName($this->request->data["Activeworktime"]);
 			// アクセスした時にダウンロードさせる為のヘッダを設定します。
@@ -211,18 +211,37 @@ class AdminController extends AppController {
 			exit;
 		}
 
+		//支払い済みにする
+		if( !empty( $this->request->data["payment"]) && !empty( $this->request->data["account_check"])){
+			$this->Activeworktime->savePaymentStatus( $this->request->data['account_check']);
+			$this->Session->setFlash ( '支払い情報の更新に成功しました。' ,'default' , array('class' => 'success') );
+		}
+
 		//ポストにない場合入力補完
-		 if( !isset( $this->request->data["Activeworktime"]["aggregate_start_date"]) &&
-		     !isset( $this->request->data["Activeworktime"]["aggregate_end_date"])){
+		 if( !isset( $this->request->data["Activeworktime"]["aggregate_start_date"]) ){
 			//初期データ
 			$this->request->data["Activeworktime"]["aggregate_start_date"] = date("Y-m-01");
-			$this->request->data["Activeworktime"]["aggregate_end_date"] = "";
 		}
 
 		$activeWorkData = $this->Activeworktime->findActiveWorkDataByQuery ( $this->request->data["Activeworktime"] );
 
-		$this->set ( 'query', $this->request->data["Activeworktime"] );
+		$this->set ( 'accountStatusList', $this->getAccountStatusList());
+		$this->set ( 'userList', $this->User->getUserList () );
 		$this->set ( "activeWorkData", $activeWorkData );
+	}
+
+	/**
+	 * 支払い状態のリスト
+	 *
+	 * @return multitype:string
+	 */
+	private function getAccountStatusList(){
+		$accountList=[
+			'2' => '全て',
+			'0' => '未払い',
+			'1' => '支払済'
+		];
+		return $accountList;
 	}
 
 	/**

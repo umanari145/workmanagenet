@@ -106,9 +106,7 @@ class Activeworktime extends AppModel {
 	 *
 	 * @return Ambigous <multitype:, NULL>
 	 */
-	public function getPointGroupingUser($query) {
-
-		list( $aggregate_start_date,$aggregate_end_date) = $this->makeStartEndDateArr($query);
+	public function getPointGroupingUser($targetIdArr) {
 
 		$params = array (
 				'fields' => array (
@@ -119,9 +117,7 @@ class Activeworktime extends AppModel {
 						'SUM(reward) as sum_reward'
 				),
 				'conditions' => array (
-						'Activeworktime.is_delete' => 0,
-						'Activeworktime.begin >= ' => $aggregate_start_date,
-						'Activeworktime.end <= ' => $aggregate_end_date
+						'Activeworktime.id' => $targetIdArr
 				),
 				'group' => array (
 						'Activeworktime.user_id'
@@ -217,19 +213,49 @@ class Activeworktime extends AppModel {
 	 */
 	public function findActiveWorkDataByQuery($query) {
 
-		list( $aggregate_start_date,$aggregate_end_date) = $this->makeStartEndDateArr($query);
+
+		$conditions = $this->makeConditions($query);
 
 		$activeWorkDataList = $this->find ( 'all', array (
-				'conditions' => array (
-						'Activeworktime.is_delete' => 0,
-						'Activeworktime.begin >= ' => $aggregate_start_date,
-						'Activeworktime.end <= ' => $aggregate_end_date
-				),
+				'conditions' => $conditions,
 				'order'=>array(
 						'Activeworktime.begin DESC'
 				)
 		) );
 		return $activeWorkDataList;
+	}
+
+	/**
+	 * 検索条件の作成
+	 *
+	 * @param unknown $query 検索条件の作成
+	 * @return 検索条件
+	 */
+	private function makeConditions( $query ){
+
+		list( $aggregate_start_date,$aggregate_end_date) = $this->makeStartEndDateArr($query);
+
+		$userId = ( isset( $query["user_id"]))? $query["user_id"]:null;
+
+		$accountStatus = ( isset( $query["account_statues"]))? $query["account_statues"]:null;
+
+		$conditions = array (
+				'Activeworktime.is_delete' => 0,
+				'Activeworktime.begin >= ' => $aggregate_start_date,
+				'Activeworktime.end <= ' => $aggregate_end_date
+		);
+
+		//全員の場合(0)は検索条件がないとの一緒
+		if( $userId !== NULL && $userId !== '0' ){
+			$conditions['Activeworktime.user_id'] = $userId;
+		}
+
+		//全ての場合(2)は検索条件がないとの一緒
+		if( $accountStatus !== NULL && $accountStatus !== '2'){
+			$conditions['Activeworktime.account_statues'] = $accountStatus;
+		}
+
+		return $conditions;
 	}
 
 	/**
@@ -278,6 +304,23 @@ class Activeworktime extends AppModel {
 
 		return $fileName;
 	}
+
+	/**
+	 * 対象の稼働履歴idに対して支払い済みにする
+	 *
+	 * @param unknown $activeworkLineIdArr
+	 *        	支払い済み
+	 */
+	public function savePaymentStatus($activeworkLineIdArr = array()) {
+		$conditions = array (
+				'Activeworktime.id' => $activeworkLineIdArr
+		);
+		$updatefield = array (
+				'Activeworktime.account_statues' => 1
+		);
+		$this->updateAll ( $updatefield, $conditions );
+	}
+
 
 	/**
 	 * 対象月の配列の作成

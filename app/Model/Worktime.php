@@ -79,7 +79,7 @@ class Worktime extends AppModel {
 				break;
 			case "2" :
 				$headMessage = "勤務終了";
-				$time = $workLineData ["Worktime"] ["start_time"];
+				$time = $workLineData ["Worktime"] ["end_time"];
 				$other =" \r\n " . "報告　" . $workLineData["Worktime"]["report"];
 				break;
 			default :

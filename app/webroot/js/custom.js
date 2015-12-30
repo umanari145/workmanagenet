@@ -1,3 +1,19 @@
+$(function() {
+
+	$("#all_check").click(function(){
+			//ここがチェックされたら
+		$(".account_status_check_box").prop('checked',true);
+			return false;
+	});
+
+	$("#all_check_out").click(function(){
+		//ここがチェックされたら
+		$(".account_status_check_box").prop('checked',false);
+		return false;
+	});
+
+});
+
 var PassSec=0;
 var started=false;
 var startDate;

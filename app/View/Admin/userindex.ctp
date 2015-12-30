@@ -11,6 +11,7 @@
 		<th>最終ログイン日時</th>
 		<th>当月稼働回数</th>
 		<th>当月稼働合計時間</th>
+		<th>当月合計報酬</th>
 		<th>削除</th>
 	</tr>
 
@@ -22,6 +23,7 @@
 		<td><?php echo $user["User"]["last_login_time"]; ?></td>
 		<td><?php echo $user["User"]["work_count"]; ?>回</td>
 		<td><?php echo $this->Customize->convertSecondTohms($user["User"]["work_sum_time"]);?></td>
+		<td><?php echo $this->Number->currency($user["User"]["work_sum_time"],'JPY',array('places'=>0)); ?>
 		<td>
 			<?php echo $this->form->postLink('削除', array('action'=>'userdelete', $user['User']['id']),
 				 array('class'=>'link-style'), 'このスタッフを本当に削除しますか?');?>
