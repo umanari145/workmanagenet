@@ -26,13 +26,20 @@ class Sendmail{
 	 */
 	private function addMailFooter( $mailMessage){
 
-		$ipAdress = ( !empty( $_SERVER["REMOTE_ADDR"]))? $_SERVER["REMOTE_ADDR"]:"";
+		$ipAdress = $this->getIpAddress();
 
-		if( $ipAdress !== ""){
+		if( !empty($ipAdress)){
 			$mailMessage .=" \r\n "
-					     ." IPアドレス ". $_SERVER["REMOTE_ADDR"];
+					     ." IPアドレス ". $ipAdress;
 		}
 		return $mailMessage;
+	}
+
+	/**
+	 * IPアドレス
+	 */
+	private function getIpAddress(){
+		return $this->request->clientIp(false);
 	}
 
 }
