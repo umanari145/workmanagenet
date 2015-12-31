@@ -26,9 +26,9 @@ class Sendmail{
 	 */
 	private function addMailFooter( $mailMessage){
 
-		$ipAdress = $this->getIpAddress();
+		$ipAdress =( isset( $_SERVER['HTTP_X_FORWARDED_FOR']))? $_SERVER['HTTP_X_FORWARDED_FOR'] :"";
 
-		if( !empty($ipAdress)){
+		if( $ipAdress !== ""){
 			$mailMessage .=" \r\n "
 					     ." IPアドレス ". $ipAdress;
 		}
