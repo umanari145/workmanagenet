@@ -1,6 +1,4 @@
 <div style="width: 500px;">
-	<p></p>
-
 	<p>
 	<?php
 

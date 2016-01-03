@@ -16,4 +16,3 @@
 		<dd><?php echo $workdetail["Worktime"]["report"]; ?></dd>
 	</dl>
 </div>
-<?php echo $this->element('left'); ?>

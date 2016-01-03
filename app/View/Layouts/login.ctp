@@ -31,12 +31,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 	<?php
 		echo $this->Html->meta('icon');
-		//echo $this->Html->css('admin');
 		echo $this->Html->css('jquery-ui.min');
 		echo $this->Html->css('bootstrap');
-		?>
-		<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
-	<?php
 		echo $this->Html->script('jquery-1.11.3.min');
 		echo $this->Html->script('sugar.min');
 		echo $this->Html->script('custom');
@@ -44,30 +40,19 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->Html->script('jquery-ui.min');
 		echo $this->Html->script('sortable');
 		echo $this->Html->script('bootstrap.min');
-		echo $this->Html->script('jquery.dataTables.min');
-		echo $this->Html->script('dataTables.bootstrap.min');
-		echo $this->Html->script('dataTables.scroller.min');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
-
-    <script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-
 </head>
 <body>
-	<?php echo $this->element('headnav'); ?>
-	<div class="container">
-		<?php echo $this->Session->flash(); ?>
-		<?php echo $this->fetch('content'); ?>
-		<input type="hidden" id="entry_url" value="<?php echo ENTRY_URL; ?>">
-		<div id="footer">
-			<p>勤怠管理アプリ管理画面</p>
-		</div>
-	<?php echo $this->element('sql_dump'); ?>
+
+	<?php echo $this->Session->flash(); ?>
+	<?php echo $this->fetch('content'); ?>
+	<input type="hidden" id="entry_url" value="<?php echo ENTRY_URL; ?>">
+	<div id="footer">
+		<p>勤怠管理アプリ管理画面</p>
 	</div>
+	<?php echo $this->element('sql_dump'); ?>
 </body>
 </html>

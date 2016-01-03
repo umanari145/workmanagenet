@@ -51,6 +51,17 @@ class AdminController extends AppController {
 	}
 
 	/**
+	 *
+	 */
+	public function userApi(){
+		$this->autoRender = FALSE;
+		$users = $this->User->getUserData ( true );
+		$jsonRooms = json_encode($rooms);
+		echo $jsonRooms;
+	}
+
+
+	/**
 	 * スタッフユーザー追加
 	 */
 	public function useradd() {
@@ -58,7 +69,7 @@ class AdminController extends AppController {
 		// POST の時だけ
 		if ($this->request->is ( 'post' )) {
 			if ($this->User->save ( $this->request->data )) {
-				$this->Session->setFlash ( 'スタッフの登録が成功しました。' ,'default' , array('class' => 'success') );
+				$this->Session->setFlash ( 'スタッフの登録が成功しました。' ,'default' , array('class' => 'alert alert-success') );
 				$this->redirect ( array (
 						'action' => 'userindex'
 				) );
@@ -86,7 +97,7 @@ class AdminController extends AppController {
 
 
 			if ($this->User->save ( $this->request->data )) {
-				$this->Session->setFlash ( 'スタッフの編集が成功しました。','default' , array('class' => 'success') );
+				$this->Session->setFlash ( 'スタッフの編集が成功しました。','default' , array('class' => 'alert alert-success') );
 				$this->redirect ( array (
 						'action' => 'userindex'
 				) );
@@ -119,7 +130,7 @@ class AdminController extends AppController {
 		);
 
 		if ($this->User->save ( $data )) {
-			$this->Session->setFlash ( 'スタッフの削除が完了しました。','default' , array('class' => 'success') );
+			$this->Session->setFlash ( 'スタッフの削除が完了しました。','default' , array('class' => 'alert alert-success') );
 			$this->redirect ( array (
 					'action' => 'userindex'
 			) );
@@ -171,7 +182,7 @@ class AdminController extends AppController {
 					$this->Activeworktime->importCSV ( $filename );
 					if (! $this->Activeworktime->getImportErrors ()) {
 						$db->commit ( $this->Activeworktime );
-						$this->Session->setFlash ( 'CSV登録に成功しました。' ,'default' , array('class' => 'success') );
+						$this->Session->setFlash ( 'CSV登録に成功しました。' ,'default' , array('class' => 'alert alert-success') );
 					} else {
 						$db->rollback ( $this->Activeworktime );
 						$this->Session->setFlash ( __ ( 'CSV登録に失敗しました。もう一度登録しなおしてください。' ) );
@@ -357,6 +368,13 @@ class AdminController extends AppController {
 		$this->render ( 'roomindex' );
 	}
 
+	public function roomApi(){
+		$this->autoRender = FALSE;
+		$rooms = $this->Room->getRoomData ( true );
+		$jsonRooms = json_encode($rooms);
+		echo $jsonRooms;
+	}
+
 	/**
 	 * 部屋追加
 	 */
@@ -365,7 +383,7 @@ class AdminController extends AppController {
 		// POST の時だけ
 		if ($this->request->is ( 'post' )) {
 			if ($this->Room->save ( $this->request->data )) {
-				$this->Session->setFlash ( '部屋の登録が成功しました。','default' , array('class' => 'success') );
+				$this->Session->setFlash ( '部屋の登録が成功しました。','default' , array('class' => 'alert alert-success') );
 				$this->redirect ( array (
 						'action' => 'roomindex'
 				) );
@@ -391,12 +409,12 @@ class AdminController extends AppController {
 
 		if ($this->request->is ( 'post' ) || $this->request->is ( 'put' )) {
 			if ($this->Room->save ( $this->request->data )) {
-				$this->Session->setFlash ( '部屋の編集が成功しました。','default' , array('class' => 'success') );
+				$this->Session->setFlash ( '部屋の編集が成功しました。','default' , array('class' => 'alert alert-success') );
 				$this->redirect ( array (
 						'action' => 'roomindex'
 				) );
 			} else {
-				$this->Session->setFlash ( __ ( '部屋の情報をを編集することができませんでした。もう一度実行してください。' ) );
+				$this->Session->setFlash ( __ ( '部屋の情報を編集することができませんでした。もう一度実行してください。' ) );
 			}
 		} else {
 			$this->request->data = $this->Room->read ( null, $id );
@@ -424,7 +442,7 @@ class AdminController extends AppController {
 		);
 
 		if ($this->Room->save ( $data )) {
-			$this->Session->setFlash ( '部屋の削除が完了しました。','default' , array('class' => 'success') );
+			$this->Session->setFlash ( '部屋の削除が完了しました。','default' , array('class' => 'alert alert-success') );
 			$this->redirect ( array (
 					'action' => 'roomindex'
 			) );
@@ -472,6 +490,7 @@ class AdminController extends AppController {
 	 * ログインメソッド
 	 */
 	public function login() {
+		$this->layout ="login";
 		if ($this->Auth->loggedIn ()) {
 			$this->redirect ( $this->Auth->redirect () );
 		}

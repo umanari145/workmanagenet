@@ -1,5 +1,6 @@
 <?php
 App::uses ( 'AppModel', 'Model' );
+App::import('Vendor', 'util/arrayConverter');
 
 class Room extends AppModel {
 
@@ -33,18 +34,36 @@ class Room extends AppModel {
 
 	/**
 	 * 部屋データの取得
+	 *
+	 * @param $isApi apiモード
 	 * @return 部屋データの配列
 	 */
-	public function getRoomData(){
-		$conditions = array(
-				'fields' => array(
+	public function getRoomData($isApi = false) {
+		$conditions = array (
+				'fields' => array (
 						'id',
 						'room_name'
 				),
 				'conditions' => array (
 						'Room.is_delete' => 0
 				)
-		);
-		return $this->find('all',$conditions);
+		)
+		// 'offset'=>0,
+		// 'limit'=>100
+		;
+
+		$rooms = $this->find ( 'all', $conditions );
+
+		foreach ( $rooms as &$room ) {
+			$room['Room'] ['check_box'] = "<input type='checkbox' class='del_box' name='room_" . $room ['Room'] ['id'] . "' >";
+		}
+
+		if ($isApi) {
+			$arrayConverter = new ArrayConverter ();
+			$recorForJson = $arrayConverter->convertPagerApi ( $rooms );
+			return $recorForJson;
+		}
+
+		return $rooms;
 	}
 }

@@ -50,7 +50,6 @@ echo $this->Form->input ( 'reserve_period',array (
 	<?php endforeach; ?>
 
 </table>
-
 </div>
-<?php echo $this->element('left'); ?>
+
 

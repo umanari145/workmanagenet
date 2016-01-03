@@ -36,4 +36,4 @@
 </table>
 
 </div>
-<?php echo $this->element('left'); ?>
+

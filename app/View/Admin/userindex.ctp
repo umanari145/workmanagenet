@@ -1,9 +1,12 @@
+<script type="text/javascript">
+$(function() {
+	getDataTables("userApi");
+})
+</script>
 
+<h2><?php echo __('スタッフ一覧');?></h2>
 
-<div class="items index">
-    <h2><?php echo __('スタッフ一覧');?></h2>
-
-<table cellpadding="0" cellspacing="0" >
+<table id="recordTable" cellpadding="0" cellspacing="0" class="table table-condensed" >
 	<tr>
 		<th>No</th>
    		<th>ログインユーザー名</th>
@@ -32,5 +35,3 @@
         <?php endforeach;?>
     <!--items_area end-->
 </table>
-</div>
-<?php echo $this->element('left'); ?>

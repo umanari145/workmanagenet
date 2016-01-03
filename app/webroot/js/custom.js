@@ -12,7 +12,39 @@ $(function() {
 		return false;
 	});
 
+	$(".select_all").click(function(){
+		if($(".select_all").prop("checked")){
+			$(".del_box").prop("checked",true);
+		}else{
+			$(".del_box").prop("checked",false);
+		}
+	})
+
+
 });
+
+function getDataTables( controller ){
+
+	var entry_url = $("#entry_url").val();
+	 $('#recordTable').dataTable({
+		 "sDom": 'ti',
+         "ajax": entry_url+"admin/" + controller,
+         "deferRender":true,
+         "scrollY": 300 + "px",
+         "scrollCollapse": true,
+		  "scroller":true,
+		  "aoColumnDefs": [
+		                   { "bSortable": false, "aTargets": [2] }
+		               ],
+         "oLanguage": {
+               "sProcessing": "処理中...",
+               "sInfo": "該当: <strong>_TOTAL_</strong> 件 (<strong>_START_</strong>～<strong>_END_</strong>件 を表示しています)",
+               "sInfoEmpty": " 0 件中 0 から 0 まで表示"
+         }
+
+	 });
+
+}
 
 var PassSec=0;
 var started=false;

@@ -92,7 +92,4 @@
     <!--items_area end-->
 	</table>
 	<?php echo $this->Form->end(); ?>
-
-
 </div>
-<?php echo $this->element('left'); ?>

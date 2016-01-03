@@ -17,4 +17,3 @@
 <?php echo $this->Form->submit('保存');?>
 <?php echo $this->Form->end();?>
 </div>
-<?php echo $this->element('left'); ?>
