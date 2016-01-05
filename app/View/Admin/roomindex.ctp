@@ -16,7 +16,6 @@ $(function() {
 				<th class="col-xs-1"><input type="checkbox" class="select_all" size></th>
 			</tr>
 		</thead>
-
 		<!--items_area end-->
 	</table>
 </div>

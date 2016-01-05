@@ -461,7 +461,6 @@ class AdminController extends AppController {
 				$this->Reserve->reserveRoom ( $this->request->data );
 				$this->Session->setFlash ( __ ( '部屋の予約が成功しました。' ) );
 			}
-			$roomId = $this->request->data ['User'] ['room_id'];
 			$startPeriod = $this->request->data ['User'] ['reserve_period'];
 		} else {
 			$resData = $this->Room->find ( 'first', array (
@@ -470,19 +469,18 @@ class AdminController extends AppController {
 							'Room.room_name <>' => '在宅'
 					)
 			) );
-			$roomId = $resData ['Room'] ['id'];
 			$startPeriod = date('Y/m/d');
 		}
 
 		$roomIdArr = $this->Room->getRoomList ();
 		$roomScheduleeArr = $this->Reserve->createAvailabelTime ( $roomIdArr, $startPeriod, true );
+
 		$this->set ( "weekPullDownList", $this->Reserve->makeWeekPeriodPullDown());
-		$this->set ( "roomList", $this->Room->getRoomList ( true ) );
-		$this->set ( "roomId", $roomId );
+		$this->set ( "roomList", $this->Room->getRoomList (true) );
 		$this->set ( "startPeriod", $startPeriod );
-		$this->set ( "weekArr", array_keys($roomScheduleeArr[$roomId]['timeline']));
+		$this->set ( "weekArr", array_keys($roomScheduleeArr[1]['timeline']));
 		$this->set ( "masterTimelineArr", $this->Reserve->getTimeline () );
-		$this->set ( "roomScheduleeArr", $roomScheduleeArr [$roomId] );
+		$this->set ( "roomScheduleeArr", $roomScheduleeArr );
 	}
 
 
